@@ -13,7 +13,7 @@ export async function onRequest(context) {
  const token = cookies(request).caravan_session;
  let ok=false;
  if(token){const [expiry,sig]=token.split('.');if(expiry && sig && /^\d+$/.test(expiry) && Number(expiry)>Date.now()){const expected=await signature(env.SESSION_SECRET,expiry);ok=expected.length===sig.length && expected.split('').every((c,i)=>c===sig[i]);}}
- if(!ok){if(url.pathname.startsWith('/api/')) return Response.json({error:'Unauthorized'},{status:401});return Response.redirect(new URL('/login',request.url),302);}
+ if(!ok){if(url.pathname.startsWith('/api/')) return Response.json({error:'Unauthorized'},{status:401});return Response.redirect(new URL('/login.html',request.url),302);}
  return next();
 }
 export async function makeCookie(secret) {
