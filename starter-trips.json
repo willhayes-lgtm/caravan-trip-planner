@@ -1,0 +1,15 @@
+{
+ "format":"caravan-planner-v1",
+ "trips":[
+  {"title":"Hartington Hills","location":"Buxton","start_date":"2027-02-12","end_date":"2027-02-15","cost":143,"paid":0,"diesel":0,"leave_days":0,"status":"booked","notes":"Confirmed booking. Additional 2.5 hours leave (not included in leave days)."},
+  {"title":"Min-y-don","location":"Harlech","start_date":"2027-03-26","end_date":"2027-03-29","cost":284,"paid":96,"diesel":0,"leave_days":0,"status":"booked","due_date":"2027-02-26","notes":"£188 balance outstanding."},
+  {"title":"Pen Y Bont","location":"Bala","start_date":"2027-04-08","end_date":"2027-04-11","cost":204,"paid":0,"diesel":0,"leave_days":2,"status":"planned"},
+  {"title":"Silverdale Holiday Park","location":"Carnforth","start_date":"2027-04-30","end_date":"2027-05-03","cost":198,"paid":0,"diesel":0,"leave_days":0,"status":"planned","notes":"Additional 2.5 hours annual leave."},
+  {"title":"France and Disneyland Paris","location":"Black Horse Farm; Caravaning des 4 Vents; La Croix du Vieux Pont","start_date":"2027-05-28","end_date":"2027-06-09","cost":2047.25,"paid":0,"diesel":440,"leave_days":8,"status":"planned","notes":"Outbound P&O Dover–Calais 29 May 09:00; return 8 June 12:00. Disney park days 31 May–2 June. Includes ferry £496.91, Disney tickets £972, UK overnights £82.40. Total provisional £2,487.25; verify French campsite and toll breakdown."},
+  {"title":"Manor Wood","location":"Manor Wood Country Caravan Park","start_date":"2027-06-18","end_date":"2027-06-20","cost":0,"paid":0,"diesel":0,"leave_days":0,"status":"planned","notes":"Additional 2.5 hours leave."},
+  {"title":"Plassey Holiday Park","location":"Plassey","start_date":"2027-07-29","end_date":"2027-08-01","cost":223.2,"paid":0,"diesel":0,"leave_days":2,"status":"planned"},
+  {"title":"Cornwall summer holiday","location":"Cadeside; Polmanter; Monkey Tree","start_date":"2027-08-14","end_date":"2027-08-24","cost":1145.7,"paid":164,"diesel":270,"leave_days":7,"status":"booked","notes":"Cadeside 14 & 23 Aug (£31.10 each), not booked. Polmanter 15–20 Aug, pitch 264, £517.50, £50 paid, £467.50 due 4 Jul. Monkey Tree 20–23 Aug Ultra Deluxe, £566, £114 paid, £452 due 25 Jun. Both main sites confirmed; Cadeside outstanding."},
+  {"title":"September trip","location":"Destination to be confirmed","start_date":"2027-09-24","end_date":"2027-09-26","cost":0,"paid":0,"diesel":0,"leave_days":0,"status":"planned","notes":"Destination and cost TBC; additional 2.5 hours leave."},
+  {"title":"Wirral Country Park","location":"Wirral","start_date":"2027-10-15","end_date":"2027-10-17","cost":77.4,"paid":0,"diesel":0,"leave_days":0,"status":"planned"}
+ ]
+}

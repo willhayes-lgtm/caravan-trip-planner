@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS trips (
+ id TEXT PRIMARY KEY,
+ title TEXT NOT NULL,
+ location TEXT NOT NULL DEFAULT '',
+ start_date TEXT NOT NULL,
+ end_date TEXT NOT NULL,
+ cost REAL NOT NULL DEFAULT 0,
+ paid REAL NOT NULL DEFAULT 0,
+ diesel REAL NOT NULL DEFAULT 0,
+ leave_days REAL NOT NULL DEFAULT 0,
+ status TEXT NOT NULL DEFAULT 'planned',
+ notes TEXT NOT NULL DEFAULT '',
+ booking_ref TEXT NOT NULL DEFAULT '',
+ due_date TEXT NOT NULL DEFAULT '',
+ updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
