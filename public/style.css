@@ -132,3 +132,41 @@ button.secondary{background:#e4f1f1;color:var(--ocean)}
 .past-filter{padding:12px;background:#eaf4f2;border-radius:10px}
 .trip-rating{margin:8px 0;color:#6a5a29;font-size:.9rem}
 #ratingField[hidden]{display:none!important}
+
+/* Progressive disclosure: one short summary card, with all details on demand */
+.compact-trip .trip-body{padding:18px}
+.compact-trip .trip-image,.compact-trip .trip-placeholder{height:175px}
+.compact-trip .top{margin-bottom:8px}
+.compact-trip .top>div{min-width:0}
+.compact-trip h3{line-height:1.25;overflow-wrap:anywhere}
+.compact-trip .meta{line-height:1.5}
+.compact-trip .trip-countdown{margin-top:8px;padding:7px 10px}
+.compact-highlight{margin:10px 0;font-weight:600;color:#7a5b1c}
+.compact-balance{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;font-size:14px;color:#496a70}
+.compact-balance strong{color:var(--ocean);font-size:18px}
+.compact-due{margin-top:9px;background:#fff8ed;border-left:3px solid var(--sand);border-radius:8px;padding:9px 12px;color:#70543b;font-size:13px}
+.compact-details{margin-top:14px;border-top:1px solid #dce9e9}
+.compact-details>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;padding:14px 2px 0;color:#116e78;font-weight:750}
+.compact-details>summary::-webkit-details-marker{display:none}
+.compact-chevron{font-size:22px;line-height:1;transition:transform .2s}
+.compact-details[open] .compact-chevron{transform:rotate(180deg)}
+.compact-details-body{padding-top:16px}
+.compact-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;background:#f0f7f6;padding:14px;border-radius:12px}
+.compact-facts>div{min-width:0}
+.compact-facts small{display:block;color:#627d82;font-size:12px;margin-bottom:4px}
+.compact-facts strong{display:block;color:var(--ocean);font-size:14px;overflow-wrap:anywhere}
+.compact-trip .booking-summary{margin-top:12px}
+.compact-trip .ideas,.compact-trip .trip-extra,.compact-trip .stop-timeline{margin:12px 0}
+.compact-actions{align-items:center;justify-content:space-between}
+.compact-more{position:relative}
+.compact-more>summary{cursor:pointer;list-style:none;border-radius:9px;background:#e4f1f1;color:var(--ocean);padding:11px 15px;font-weight:650}
+.compact-more>summary::-webkit-details-marker{display:none}
+.compact-more>div{margin-top:7px}
+.compact-more button{background:#fbe9e9;color:#8c3333}
+@media(max-width:700px){
+ .compact-trip .trip-image,.compact-trip .trip-placeholder{height:150px}
+ .compact-trip .trip-body{padding:15px}
+ .compact-trip h3{font-size:19px}
+ .compact-trip .pill{font-size:11px}
+ .compact-facts{gap:14px}
+}

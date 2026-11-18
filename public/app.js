@@ -64,17 +64,35 @@ function render(){
  $('#filterCount').textContent=`Showing ${visible.length} of ${trips.length} trips`;
  $('#trips').innerHTML=visible.map(t=>{
   const activities=String(t.activities||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
-  const miles=t.mileage==null||t.mileage===''?'Not set':`${Number(t.mileage).toLocaleString('en-GB')} miles`;
-  const returnMiles=roundTrip(t);
-  return `<article class="trip">${photo(t)}<div class="trip-body"><div class="top"><div><h3>${safe(t.title)}</h3><div class="meta">${safe(t.location)} · ${date(t.start_date)} – ${date(t.end_date)} · ${days(t.start_date,t.end_date)} nights</div></div><span class="pill ${safe(t.status)}">${safe(t.status)}</span></div>
-  ${t.end_date<todayISO()?`<div class="trip-rating">⭐ Site rating: <strong>${Number(t.rating)>0?Number(t.rating)+'/10':'Not rated yet'}</strong></div>`:''}<div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div><div class="awning-chip">⛺ Awning: ${safe(t.awning||"Not decided")}</div><div class="mileage"><span>🚗 From Lymm Marina</span><strong>${safe(miles)} one way</strong><strong>${returnMiles===null?'Not set':returnMiles.toLocaleString('en-GB')+' miles'} round trip</strong></div>
-  <div class="numbers"><div><small>Bookings</small><strong>${money(t.cost)}</strong></div><div><small>Paid</small><strong>${money(t.paid)}</strong></div><div><small>Balance</small><strong>${money(Math.max(0,t.cost-t.paid))}</strong></div></div>
-  <div class="meta">Diesel estimate: ${money(t.diesel)} · Leave: ${leaveLabel(Number(t.leave_days||0))}</div>
-  ${stopTimeline(t)}<details class="ideas"><summary>🌿 Things to do nearby & on site <span>${activities.length} ideas</span></summary><div class="ideas-content">${activities.length?`<ul>${activities.map(a=>`<li>${safe(a)}</li>`).join('')}</ul>`:'<p>No activities added yet. Edit this trip to add local attractions and on-site ideas.</p>'}</div></details>
-  ${bookingCard(t)}
-  ${t.notes?`<details class="trip-extra"><summary>📝 Additional trip notes</summary><div class="trip-extra-content">${safe(t.notes)}</div></details>`:''}
-  <div class="actions"><button class="secondary" data-edit="${safe(t.id)}">Edit</button><button class="secondary" data-delete="${safe(t.id)}">Delete</button></div></div></article>`;
- }).join('')||'<p>No trips yet. Add a trip or import the starter data.</p>';
+  const past=t.end_date<today, balance=Math.max(0,Number(t.cost||0)-Number(t.paid||0));
+  const mileage=t.mileage==null||t.mileage===''?null:Number(t.mileage);
+  const stops=stopsFor(t),hasCosts=Number(t.cost)>0||Number(t.paid)>0;
+  const refs=stops.filter(s=>s.reference).length||(t.booking_ref?String(t.booking_ref).split(/\r?\n/).filter(Boolean).length:0);
+  const paymentHighlight=!past&&balance>0&&t.due_date?`<div class="compact-due">💳 Next payment: <strong>${date(t.due_date)}</strong></div>`:'';
+  const summaryBits=[`${date(t.start_date)} – ${date(t.end_date)}`,`${days(t.start_date,t.end_date)} nights`,stops.length?`${stops.length} stops`:null].filter(Boolean).join(' · ');
+  return `<article class="trip compact-trip">${photo(t)}<div class="trip-body">
+    <div class="top"><div><h3>${safe(t.title)}</h3><div class="meta">${summaryBits}</div></div><span class="pill ${safe(t.status)}">${safe(t.status)}</span></div>
+    ${past?(Number(t.rating)>0?`<div class="compact-highlight">⭐ Your rating: <strong>${Number(t.rating)}/10</strong></div>`:''):`<div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div>`}
+    ${!past&&balance>0?`<div class="compact-balance"><span>Outstanding balance</span><strong>${money(balance)}</strong></div>`:''}
+    ${paymentHighlight}
+    <details class="compact-details"><summary>View trip details <span class="compact-chevron" aria-hidden="true">⌄</span></summary>
+      <div class="compact-details-body">
+        <div class="compact-facts">
+          <div><small>Awning</small><strong>${safe(t.awning||'Not decided')}</strong></div>
+          ${mileage!==null?`<div><small>Towing distance</small><strong>${mileage.toLocaleString('en-GB')} mi one way · ${(mileage*2).toLocaleString('en-GB')} mi return</strong></div>`:''}
+          ${hasCosts?`<div><small>Bookings</small><strong>${money(t.cost)}</strong></div><div><small>Paid</small><strong>${money(t.paid)}</strong></div><div><small>Balance</small><strong>${money(balance)}</strong></div>`:''}
+          ${Number(t.diesel)>0?`<div><small>Diesel estimate</small><strong>${money(t.diesel)}</strong></div>`:''}
+          ${Number(t.leave_days)>0?`<div><small>Annual leave</small><strong>${leaveLabel(Number(t.leave_days))}</strong></div>`:''}
+        </div>
+        ${stops.length?stopTimeline(t):''}
+        ${bookingCard(t)}
+        ${activities.length?`<details class="ideas"><summary>🌿 Things to do <span>${activities.length} ideas</span></summary><div class="ideas-content"><ul>${activities.map(a=>`<li>${safe(a)}</li>`).join('')}</ul></div></details>`:''}
+        ${t.notes?`<details class="trip-extra"><summary>📝 Additional notes</summary><div class="trip-extra-content">${safe(t.notes)}</div></details>`:''}
+        <div class="actions compact-actions"><button class="secondary" data-edit="${safe(t.id)}">✎ Edit trip</button><details class="compact-more"><summary>••• More</summary><div><button class="secondary" data-delete="${safe(t.id)}">Delete trip</button></div></details></div>
+      </div>
+    </details>
+  </div></article>`;
+ }).join('')||'<p>No trips match your filters. Adjust the filters or add a trip.</p>';
  // Replace broken external photos with a non-broken placeholder.
  document.querySelectorAll('.trip-image').forEach(img=>img.addEventListener('error',()=>{img.outerHTML=placeholder},{once:true}));
 }
