@@ -1,4 +1,4 @@
-const fields=['title','location','start_date','end_date','cost','paid','diesel','leave_days','status','notes','booking_ref','due_date','image_url','mileage','activities'];
+const fields=['title','location','start_date','end_date','cost','paid','diesel','leave_days','status','notes','booking_ref','due_date','image_url','mileage','activities','stops','awning'];
 const numeric=['cost','paid','diesel','leave_days'];
 const allowedStatuses=['planned','booked','completed','cancelled'];
 function validate(t){
@@ -11,11 +11,23 @@ function validate(t){
  if(String(t.image_url||'').length>2000)throw Error('Image URL too long');
  if(t.image_url){let u;try{u=new URL(t.image_url)}catch{throw Error('Invalid image URL')}if(!['http:','https:'].includes(u.protocol))throw Error('Image must use HTTP or HTTPS')}
  if(String(t.activities||'').length>4000)throw Error('Activities too long');
+ if(!['Not decided','Full Awning','Canopy','No Awning'].includes(t.awning||'Not decided'))throw Error('Invalid awning');
+ let stops=t.stops||'[]';if(Array.isArray(stops))stops=JSON.stringify(stops);
+ if(typeof stops!=='string'||stops.length>16000)throw Error('Invalid itinerary');
+ let parsed;try{parsed=JSON.parse(stops)}catch{throw Error('Invalid itinerary JSON')}
+ if(!Array.isArray(parsed)||parsed.length>30)throw Error('Invalid itinerary');
+ for(const s of parsed){if(!s||typeof s!=='object'||!String(s.name||'').trim()||String(s.name).length>160)throw Error('Invalid stop name');
+  if(s.arrival&&!/^\d{4}-\d{2}-\d{2}$/.test(s.arrival))throw Error('Invalid stop arrival');
+  if(s.departure&&!/^\d{4}-\d{2}-\d{2}$/.test(s.departure))throw Error('Invalid stop departure');
+  if(s.arrival&&s.departure&&s.departure<s.arrival)throw Error('Stop departure before arrival');
+  for(const k of ['reference','notes'])if(String(s[k]||'').length>1000)throw Error('Stop text too long');
+ }
+
 }
 function normal(t){
  const o={};
  for(const k of fields)o[k]=numeric.includes(k)?Number(t[k]||0):k==='mileage'?(t[k]===''||t[k]==null?null:Number(t[k])):String(t[k]||'');
- o.status=o.status||'planned';
+ o.status=o.status||'planned';o.awning=o.awning||'Not decided';o.stops=Array.isArray(t.stops)?JSON.stringify(t.stops):String(t.stops||'[]');
  return o;
 }
 export async function onRequestGet({env}){

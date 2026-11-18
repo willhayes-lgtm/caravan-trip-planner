@@ -51,3 +51,24 @@ label.wide{grid-column:1/-1}#notice{margin-bottom:12px;color:#a13b3b}
 .booking-refs{white-space:pre-wrap;overflow-wrap:anywhere}
 .mileage strong+strong{font-size:16px;color:#137d72}
 @media(max-width:700px){.next-trip{padding:20px}.countdown>div{min-width:68px}.countdown strong{font-size:24px}}
+
+.main-nav{display:flex;gap:8px;overflow-x:auto;padding:12px max(22px,calc((100vw - 1100px)/2));background:#fff;border-bottom:1px solid #e0e9e8}
+.nav-button{white-space:nowrap;background:#e6f1ee;color:#1b5556}.nav-button.active{background:#137d72;color:#fff}
+.subpage[hidden],#tripsPage[hidden]{display:none!important}
+.stop-timeline{border:1px solid #d6e7e3;border-radius:12px;margin:16px 0;background:#f7fbfa}
+.stop-timeline summary{cursor:pointer;padding:14px;font-weight:700;display:flex;justify-content:space-between}
+.stop-timeline summary span{color:#688188;font-size:12px}
+.stop-timeline ol{margin:0 14px 15px 30px;padding:0 0 0 14px;border-left:2px solid #137d72;list-style:none;counter-reset:stop}
+.stop-timeline li{position:relative;padding:0 0 18px 16px;counter-increment:stop}
+.stop-timeline li:before{content:counter(stop);position:absolute;left:-26px;top:0;background:#137d72;color:white;border-radius:50%;height:22px;width:22px;text-align:center;font-size:13px}
+.stop-timeline li:last-child{padding-bottom:0}
+.trip-countdown{display:inline-block;background:#e5f4ef;color:#176b61;border-radius:9px;padding:8px 12px;margin-top:14px;font-weight:750}
+.awning-chip{margin-top:10px;color:#466b69;font-size:14px}
+.stop-editor{grid-column:1/-1;border:1px solid #d6e7e3;border-radius:12px;padding:12px}
+.stop-editor .toolbar{margin-bottom:10px}
+.stop-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0;border-top:1px solid #e5eeeb}
+.stop-row label:first-child,.stop-row .wide{grid-column:1/-1}
+.stop-row .stop-remove{justify-self:start}
+.list-card{background:white;border:1px solid #e0e9e8;border-radius:17px;padding:20px;box-shadow:0 5px 20px #0b31390a}
+.list-card h3{margin:0 0 8px}.list-card a{color:#137d72}
+@media(max-width:700px){.main-nav{padding:12px 18px}.stop-row{grid-template-columns:1fr}.stop-row label{grid-column:1/-1}}
