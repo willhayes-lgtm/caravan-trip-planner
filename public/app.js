@@ -9,6 +9,7 @@ function leaveLabel(totalDays){
  const mins=Math.round(Math.max(0,totalDays)*WORKING_DAY_HOURS*60),whole=Math.floor(mins/(WORKING_DAY_HOURS*60)),rest=mins-whole*WORKING_DAY_HOURS*60;
  return [whole?`${whole} ${whole===1?'day':'days'}`:'',Math.floor(rest/60)?`${Math.floor(rest/60)}h`:'',rest%60?`${rest%60}m`:''].filter(Boolean).join(' + ')||'0 days';
 }
+const todayISO=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
 const tripTotal=t=>Number(t.cost||0)+Number(t.diesel||0);
 const roundTrip=t=>t.mileage==null||t.mileage===''?null:2*Number(t.mileage);
 function nextTrip(){
@@ -51,17 +52,22 @@ function render(){
  const sum=k=>active.reduce((n,t)=>n+Number(t[k]||0),0),total=sum('cost')+sum('diesel');
  const completed=active.filter(t=>t.status==='completed');
  const completedNights=completed.reduce((n,t)=>n+days(t.start_date,t.end_date),0);
- $('#stats').innerHTML=`<div class="stat lifetime-stat"><span>🌙 Nights completed</span><strong>${completedNights}</strong><small>Lifetime total</small></div><div class="stat lifetime-stat"><span>✓ Trips completed</span><strong>${completed.length}</strong><small>Lifetime total</small></div><div class="stat"><span>Trips on planner</span><strong>${active.length}</strong></div><div class="stat"><span>Nights across all trips</span><strong>${active.reduce((n,t)=>n+days(t.start_date,t.end_date),0)}</strong></div><div class="stat"><span>Estimated total</span><strong>${money(total)}</strong></div><div class="stat"><span>Outstanding bookings</span><strong>${money(Math.max(0,sum('cost')-sum('paid')))}</strong></div><div class="stat"><span>Annual leave planned</span><strong>${leaveLabel(sum('leave_days'))}</strong></div>`;
+ $('#stats').innerHTML=`<div class="stat lifetime-stat"><span>🌙 Nights completed</span><strong>${completedNights}</strong><small>Lifetime total</small></div><div class="stat lifetime-stat"><span>✓ Trips completed</span><strong>${completed.length}</strong><small>Lifetime total</small></div><div class="stat"><span>Upcoming trips</span><strong>${active.filter(t=>t.end_date>=todayISO()).length}</strong></div><div class="stat"><span>Nights across all trips</span><strong>${active.reduce((n,t)=>n+days(t.start_date,t.end_date),0)}</strong></div><div class="stat"><span>Estimated total</span><strong>${money(total)}</strong></div><div class="stat"><span>Outstanding bookings</span><strong>${money(Math.max(0,sum('cost')-sum('paid')))}</strong></div>`;
  countdown();
- const status=$('#filterStatus').value,order=$('#sortTrips').value;
- const visible=trips.filter(t=>status==='all'||t.status===status).sort((a,b)=>order==='costAsc'?tripTotal(a)-tripTotal(b):order==='costDesc'?tripTotal(b)-tripTotal(a):a.start_date.localeCompare(b.start_date));
+ const selectedStatuses=new Set([...document.querySelectorAll('[name="tripStatusFilter"]:checked')].map(x=>x.value));
+ const showPast=$('#showPastTrips').checked,order=$('#sortTrips').value,today=todayISO();
+ const visible=trips.filter(t=>{
+  const isPast=t.end_date<today;
+  // The past-trip toggle shows historical holidays independently of the upcoming status choices.
+  return isPast?showPast:selectedStatuses.has(t.status);
+ }).sort((a,b)=>order==='costAsc'?tripTotal(a)-tripTotal(b):order==='costDesc'?tripTotal(b)-tripTotal(a):a.start_date.localeCompare(b.start_date));
  $('#filterCount').textContent=`Showing ${visible.length} of ${trips.length} trips`;
  $('#trips').innerHTML=visible.map(t=>{
   const activities=String(t.activities||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
   const miles=t.mileage==null||t.mileage===''?'Not set':`${Number(t.mileage).toLocaleString('en-GB')} miles`;
   const returnMiles=roundTrip(t);
   return `<article class="trip">${photo(t)}<div class="trip-body"><div class="top"><div><h3>${safe(t.title)}</h3><div class="meta">${safe(t.location)} · ${date(t.start_date)} – ${date(t.end_date)} · ${days(t.start_date,t.end_date)} nights</div></div><span class="pill ${safe(t.status)}">${safe(t.status)}</span></div>
-  <div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div><div class="awning-chip">⛺ Awning: ${safe(t.awning||"Not decided")}</div><div class="mileage"><span>🚗 From Lymm Marina</span><strong>${safe(miles)} one way</strong><strong>${returnMiles===null?'Not set':returnMiles.toLocaleString('en-GB')+' miles'} round trip</strong><small>Estimated road distance · return via same route · excludes local excursions</small></div>
+  ${t.end_date<todayISO()?`<div class="trip-rating">⭐ Site rating: <strong>${Number(t.rating)>0?Number(t.rating)+'/10':'Not rated yet'}</strong></div>`:''}<div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div><div class="awning-chip">⛺ Awning: ${safe(t.awning||"Not decided")}</div><div class="mileage"><span>🚗 From Lymm Marina</span><strong>${safe(miles)} one way</strong><strong>${returnMiles===null?'Not set':returnMiles.toLocaleString('en-GB')+' miles'} round trip</strong></div>
   <div class="numbers"><div><small>Bookings</small><strong>${money(t.cost)}</strong></div><div><small>Paid</small><strong>${money(t.paid)}</strong></div><div><small>Balance</small><strong>${money(Math.max(0,t.cost-t.paid))}</strong></div></div>
   <div class="meta">Diesel estimate: ${money(t.diesel)} · Leave: ${leaveLabel(Number(t.leave_days||0))}</div>
   ${stopTimeline(t)}<details class="ideas"><summary>🌿 Things to do nearby & on site <span>${activities.length} ideas</span></summary><div class="ideas-content">${activities.length?`<ul>${activities.map(a=>`<li>${safe(a)}</li>`).join('')}</ul>`:'<p>No activities added yet. Edit this trip to add local attractions and on-site ideas.</p>'}</div></details>
@@ -73,7 +79,7 @@ function render(){
  document.querySelectorAll('.trip-image').forEach(img=>img.addEventListener('error',()=>{img.outerHTML=placeholder},{once:true}));
 }
 async function reload(){try{trips=await api();$('#notice').textContent='';render()}catch(e){$('#notice').textContent=e.message}}
-function openEditor(t){renderStops(stopsFor(t||{}));const f=$('#tripForm');f.reset();for(const [k,v]of Object.entries(t||{}))if(f.elements.namedItem(k))f.elements.namedItem(k).value=v??'';$('#formTitle').textContent=t?'Edit trip':'Add trip';$('#editor').showModal();}
+function openEditor(t){renderStops(stopsFor(t||{}));const f=$('#tripForm');f.reset();for(const [k,v]of Object.entries(t||{}))if(f.elements.namedItem(k))f.elements.namedItem(k).value=v??'';f.elements.rating.value=t?.rating??0;$('#ratingField').hidden=!(t&&t.end_date<todayISO());$('#formTitle').textContent=t?'Edit trip':'Add trip';$('#editor').showModal();}
 $('#add').onclick=()=>openEditor(null);
 $('#cancel').onclick=()=>$('#editor').close();
 $('#trips').onclick=async e=>{
@@ -174,9 +180,10 @@ function bookingCard(t){
  const balance=Math.max(0,Number(t.cost||0)-Number(t.paid||0));
  return `<section class="booking-summary"><div class="booking-summary-heading"><strong>Booking & payments</strong><span class="payment-status">${balance?money(balance)+' outstanding':'No balance recorded'}</span></div>${t.due_date?`<div class="payment-due"><span>Next payment deadline</span><strong>${date(t.due_date)}</strong></div>`:''}${refs.length?`<details class="booking-refs-details"><summary>Booking references (${refs.length})</summary><div class="reference-rows">${refs.map(r=>`<div><span>${safe(r.name)}</span><strong>${safe(r.ref)}</strong></div>`).join('')}</div></details>`:''}</section>`;
 }
-$('#filterStatus').onchange=render;
+document.querySelectorAll('[name="tripStatusFilter"]').forEach(c=>c.onchange=render);
+$('#showPastTrips').onchange=render;
 $('#sortTrips').onchange=render;
-$('#clearFilters').onclick=()=>{$('#filterStatus').value='all';$('#sortTrips').value='date';render()};
+$('#clearFilters').onclick=()=>{document.querySelectorAll('[name="tripStatusFilter"]').forEach(c=>c.checked=['booked','planned'].includes(c.value));$('#showPastTrips').checked=false;$('#sortTrips').value='date';render()};
 async function towingApi(method='GET',body){const r=await fetch('/api/towing',{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok)throw Error(j.error||'Unable to load towing log');return j}
 async function loadTowing(){try{towing=await towingApi();renderTowing()}catch(e){$('#towingItems').innerHTML=`<p>${safe(e.message)}</p>`}}
 function renderTowing(){
