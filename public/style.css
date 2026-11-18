@@ -72,3 +72,37 @@ label.wide{grid-column:1/-1}#notice{margin-bottom:12px;color:#a13b3b}
 .list-card{background:white;border:1px solid #e0e9e8;border-radius:17px;padding:20px;box-shadow:0 5px 20px #0b31390a}
 .list-card h3{margin:0 0 8px}.list-card a{color:#137d72}
 @media(max-width:700px){.main-nav{padding:12px 18px}.stop-row{grid-template-columns:1fr}.stop-row label{grid-column:1/-1}}
+/* Coastal Escape: deep ocean blue, turquoise, warm sand and pale sea mist */
+:root{--ocean:#123F52;--teal:#238C9A;--mist:#F4F9F8;--sand:#E4C39A;--white:#FFFFFF}
+body{background:var(--mist);color:var(--ocean)}
+header{background:linear-gradient(125deg,#123F52,#195d6e);color:#fff}
+header p,header .eyebrow{color:#d2ebed}
+button:not(.secondary):not(.nav-button){background:var(--teal);color:#fff}
+button:not(.secondary):not(.nav-button):hover{background:#176f7a}
+button.secondary{background:#e4f1f1;color:var(--ocean)}
+.nav-button{background:#e8f3f3;color:var(--ocean)}.nav-button.active{background:var(--ocean);color:white}
+.next-trip{background:linear-gradient(120deg,var(--ocean),#216e7a)}
+.trip,.list-card,.stat{background:#fff;border-color:#dce9e9}
+.trip h3,.list-card h3{color:var(--ocean)}
+.trip-countdown{background:#e2f3f3;color:#176f7a}
+.stop-timeline{background:#f4faf9;border-color:#cce3e3}
+.stop-timeline li:before{background:var(--teal)}
+.stop-timeline ol{border-color:var(--teal)}
+.booking-summary{margin-top:18px;background:#f4f9f8;border:1px solid #d9e9e7;border-radius:14px;padding:16px;display:grid;gap:12px}
+.booking-summary-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.booking-summary-heading strong{font-size:16px}.payment-status{color:#146b72;font-size:13px;font-weight:700}
+.payment-due{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border-left:4px solid var(--sand);padding:12px;border-radius:8px;font-size:14px}
+.payment-due strong{white-space:nowrap}
+.booking-refs-details{border-top:1px solid #d9e9e7;padding-top:10px}
+.booking-refs-details summary,.trip-extra summary{cursor:pointer;font-weight:650;color:var(--ocean);padding:5px 0}
+.reference-rows{display:grid;gap:10px;padding:12px 0 4px}
+.reference-rows>div{display:grid;gap:3px;font-size:13px;overflow-wrap:anywhere}
+.reference-rows span{color:#60777a}.reference-rows strong{font-size:14px}
+.trip-extra{margin-top:14px;border:1px solid #dce9e9;border-radius:12px;padding:12px 14px}
+.trip-extra-content{white-space:pre-wrap;overflow-wrap:anywhere;padding:12px 0 2px;font-size:14px;line-height:1.6;color:#385960}
+.trip-filters{display:flex;align-items:end;flex-wrap:wrap;gap:12px;background:white;border:1px solid #dce9e9;border-radius:14px;padding:14px;margin-bottom:20px}
+.trip-filters label{display:grid;gap:6px;font-size:13px;font-weight:650;flex:1;min-width:155px}
+.trip-filters select{width:100%;padding:10px;border:1px solid #cddede;border-radius:8px;background:white;color:var(--ocean)}
+.trip-filters #filterCount{color:#5b777d;font-size:12px}
+.tow-miles{white-space:nowrap;font-size:19px;color:var(--teal)}
+@media(max-width:700px){.booking-summary{padding:13px}.payment-due{align-items:start;flex-direction:column;gap:4px}.trip-filters{align-items:stretch}.trip-filters button{width:100%}}

@@ -1,4 +1,4 @@
-let trips=[],wishlist=[],shopping=[];
+let trips=[],wishlist=[],shopping=[],towing=[];
 const $=s=>document.querySelector(s);
 const money=n=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(Number(n)||0);
 const days=(a,b)=>Math.max(0,Math.round((Date.parse(b+'T12:00:00Z')-Date.parse(a+'T12:00:00Z'))/86400000));
@@ -9,6 +9,7 @@ function leaveLabel(totalDays){
  const mins=Math.round(Math.max(0,totalDays)*WORKING_DAY_HOURS*60),whole=Math.floor(mins/(WORKING_DAY_HOURS*60)),rest=mins-whole*WORKING_DAY_HOURS*60;
  return [whole?`${whole} ${whole===1?'day':'days'}`:'',Math.floor(rest/60)?`${Math.floor(rest/60)}h`:'',rest%60?`${rest%60}m`:''].filter(Boolean).join(' + ')||'0 days';
 }
+const tripTotal=t=>Number(t.cost||0)+Number(t.diesel||0);
 const roundTrip=t=>t.mileage==null||t.mileage===''?null:2*Number(t.mileage);
 function nextTrip(){
  const today=new Date();today.setHours(0,0,0,0);
@@ -50,17 +51,20 @@ function render(){
  const sum=k=>active.reduce((n,t)=>n+Number(t[k]||0),0),total=sum('cost')+sum('diesel');
  $('#stats').innerHTML=`<div class="stat"><span>Trips planned</span><strong>${active.length}</strong></div><div class="stat"><span>Nights away</span><strong>${active.reduce((n,t)=>n+days(t.start_date,t.end_date),0)}</strong></div><div class="stat"><span>Estimated total</span><strong>${money(total)}</strong></div><div class="stat"><span>Outstanding bookings</span><strong>${money(Math.max(0,sum('cost')-sum('paid')))}</strong></div><div class="stat"><span>Annual leave planned</span><strong>${leaveLabel(sum('leave_days'))}</strong></div>`;
  countdown();
- $('#trips').innerHTML=trips.map(t=>{
+ const status=$('#filterStatus').value,order=$('#sortTrips').value;
+ const visible=trips.filter(t=>status==='all'||t.status===status).sort((a,b)=>order==='costAsc'?tripTotal(a)-tripTotal(b):order==='costDesc'?tripTotal(b)-tripTotal(a):a.start_date.localeCompare(b.start_date));
+ $('#filterCount').textContent=`Showing ${visible.length} of ${trips.length} trips`;
+ $('#trips').innerHTML=visible.map(t=>{
   const activities=String(t.activities||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
   const miles=t.mileage==null||t.mileage===''?'Not set':`${Number(t.mileage).toLocaleString('en-GB')} miles`;
   const returnMiles=roundTrip(t);
   return `<article class="trip">${photo(t)}<div class="trip-body"><div class="top"><div><h3>${safe(t.title)}</h3><div class="meta">${safe(t.location)} · ${date(t.start_date)} – ${date(t.end_date)} · ${days(t.start_date,t.end_date)} nights</div></div><span class="pill ${safe(t.status)}">${safe(t.status)}</span></div>
-  <div class="trip-countdown">${daysToGo(t)}</div><div class="awning-chip">⛺ Awning: ${safe(t.awning||"Not decided")}</div><div class="mileage"><span>🚗 From Lymm Marina</span><strong>${safe(miles)} one way</strong><strong>${returnMiles===null?'Not set':returnMiles.toLocaleString('en-GB')+' miles'} round trip</strong><small>Estimated road distance · return via same route · excludes local excursions</small></div>
+  <div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div><div class="awning-chip">⛺ Awning: ${safe(t.awning||"Not decided")}</div><div class="mileage"><span>🚗 From Lymm Marina</span><strong>${safe(miles)} one way</strong><strong>${returnMiles===null?'Not set':returnMiles.toLocaleString('en-GB')+' miles'} round trip</strong><small>Estimated road distance · return via same route · excludes local excursions</small></div>
   <div class="numbers"><div><small>Bookings</small><strong>${money(t.cost)}</strong></div><div><small>Paid</small><strong>${money(t.paid)}</strong></div><div><small>Balance</small><strong>${money(Math.max(0,t.cost-t.paid))}</strong></div></div>
-  <div class="meta">Diesel estimate: ${money(t.diesel)} · Leave: ${leaveLabel(Number(t.leave_days||0))}${t.due_date?' · Due '+date(t.due_date):''}</div>
+  <div class="meta">Diesel estimate: ${money(t.diesel)} · Leave: ${leaveLabel(Number(t.leave_days||0))}</div>
   ${stopTimeline(t)}<details class="ideas"><summary>🌿 Things to do nearby & on site <span>${activities.length} ideas</span></summary><div class="ideas-content">${activities.length?`<ul>${activities.map(a=>`<li>${safe(a)}</li>`).join('')}</ul>`:'<p>No activities added yet. Edit this trip to add local attractions and on-site ideas.</p>'}</div></details>
-  ${t.booking_ref||t.due_date?`<div class="booking-info"><strong>📋 Booking details</strong>${t.booking_ref?`<div class="booking-refs">${safe(t.booking_ref)}</div>`:''}${t.due_date?`<div>Next payment due: <strong>${date(t.due_date)}</strong></div>`:''}</div>`:''}
-  ${t.notes?`<p class="trip-notes">${safe(t.notes)}</p>`:''}
+  ${bookingCard(t)}
+  ${t.notes?`<details class="trip-extra"><summary>📝 Additional trip notes</summary><div class="trip-extra-content">${safe(t.notes)}</div></details>`:''}
   <div class="actions"><button class="secondary" data-edit="${safe(t.id)}">Edit</button><button class="secondary" data-delete="${safe(t.id)}">Delete</button></div></div></article>`;
  }).join('')||'<p>No trips yet. Add a trip or import the starter data.</p>';
  // Replace broken external photos with a non-broken placeholder.
@@ -92,8 +96,8 @@ $('#file').onchange=async e=>{
  }catch(err){alert(err.message)}finally{e.target.value=''}
 };
 $('#logout').onclick=async()=>{await fetch('/api/logout',{method:'POST'});location.href='/login'};
-reload();loadLists();
-setInterval(()=>{countdown();document.querySelectorAll('.trip-countdown').forEach((el,i)=>{if(trips[i])el.textContent=daysToGo(trips[i])})},60000);
+reload();loadLists();loadTowing();
+setInterval(()=>{countdown();document.querySelectorAll('.trip-countdown').forEach(el=>{const t=trips.find(x=>x.id===el.dataset.tripId);if(t)el.textContent=daysToGo(t)})},60000);
 
 // Itinerary editor: each stop is persisted as JSON in the trips.stops column.
 function stopRow(t={}){
@@ -111,7 +115,7 @@ $('#addStop').onclick=()=>stopRow();
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{
  const page=b.dataset.page;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===b));
  for(const p of ['trips','wishlist','shopping'])document.querySelector('#'+p+'Page').hidden=p!==page;
- if(page!=='trips')loadLists();
+ if(page==='wishlist'||page==='shopping')loadLists();if(page==='towing')loadTowing();
 });
 async function listApi(kind,method='GET',body){
  const r=await fetch('/api/'+kind,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
@@ -156,3 +160,35 @@ for(const kind of ['wishlist','shopping'])$('#'+(kind==='wishlist'?'wishlistItem
   openEditor({title:item.name,location:item.location,notes:item.notes,start_date:'',end_date:'',status:'planned',cost:0,paid:0,diesel:0,leave_days:0,image_url:'',mileage:'',activities:'',awning:'Not decided',stops:'[]'});
  }
 };
+
+// Booking references are presented as structured, scannable data.
+function bookingCard(t){
+ const stops=stopsFor(t),refs=stops.filter(s=>s.reference).map(s=>({name:s.name,ref:s.reference}));
+ if(!refs.length&&t.booking_ref){
+  const lines=String(t.booking_ref).split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  for(const line of lines){const idx=line.indexOf(': ');refs.push(idx>0?{name:line.slice(0,idx),ref:line.slice(idx+2)}:{name:'Booking reference',ref:line})}
+ }
+ if(!refs.length&&!t.due_date&&!Number(t.cost))return '';
+ const balance=Math.max(0,Number(t.cost||0)-Number(t.paid||0));
+ return `<section class="booking-summary"><div class="booking-summary-heading"><strong>Booking & payments</strong><span class="payment-status">${balance?money(balance)+' outstanding':'No balance recorded'}</span></div>${t.due_date?`<div class="payment-due"><span>Next payment deadline</span><strong>${date(t.due_date)}</strong></div>`:''}${refs.length?`<details class="booking-refs-details"><summary>Booking references (${refs.length})</summary><div class="reference-rows">${refs.map(r=>`<div><span>${safe(r.name)}</span><strong>${safe(r.ref)}</strong></div>`).join('')}</div></details>`:''}</section>`;
+}
+$('#filterStatus').onchange=render;
+$('#sortTrips').onchange=render;
+$('#clearFilters').onclick=()=>{$('#filterStatus').value='all';$('#sortTrips').value='date';render()};
+async function towingApi(method='GET',body){const r=await fetch('/api/towing',{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok)throw Error(j.error||'Unable to load towing log');return j}
+async function loadTowing(){try{towing=await towingApi();renderTowing()}catch(e){$('#towingItems').innerHTML=`<p>${safe(e.message)}</p>`}}
+function renderTowing(){
+ const total=towing.reduce((n,t)=>n+Number(t.miles||0),0),year=new Date().getFullYear(),yearMiles=towing.filter(t=>t.journey_date.startsWith(String(year))).reduce((n,t)=>n+Number(t.miles||0),0);
+ $('#towingStats').innerHTML=`<div class="stat"><span>Total logged towing</span><strong>${total.toLocaleString('en-GB',{maximumFractionDigits:1})} miles</strong></div><div class="stat"><span>${year} towing</span><strong>${yearMiles.toLocaleString('en-GB',{maximumFractionDigits:1})} miles</strong></div><div class="stat"><span>Journey legs logged</span><strong>${towing.length}</strong></div>`;
+ $('#towingItems').innerHTML=towing.map(t=>`<article class="list-card"><div class="top"><div><h3>${safe(t.origin)} → ${safe(t.destination)}</h3><p class="meta">${date(t.journey_date)}${t.trip_id&&trips.find(x=>x.id===t.trip_id)?' · '+safe(trips.find(x=>x.id===t.trip_id).title):''}</p></div><strong class="tow-miles">${Number(t.miles).toLocaleString('en-GB')} mi</strong></div>${t.notes?`<p class="meta">${safe(t.notes)}</p>`:''}<div class="actions"><button class="secondary" data-tow-edit="${safe(t.id)}">Edit</button><button class="secondary" data-tow-delete="${safe(t.id)}">Delete</button></div></article>`).join('')||'<p>No towing journeys logged yet. Add each journey leg to build your lifetime towing total.</p>';
+}
+function towingEditor(t={}){
+ const f=$('#towingForm');f.reset();$('#towingTitle').textContent=t.id?'Edit journey':'Log towing journey';
+ $('#towTrip').innerHTML='<option value="">No linked trip</option>'+trips.map(x=>`<option value="${safe(x.id)}">${safe(x.title)}</option>`).join('');
+ for(const [k,v]of Object.entries(t))if(f.elements.namedItem(k))f.elements.namedItem(k).value=v??'';
+ if(!t.id){const now=new Date();f.elements.journey_date.value=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-')}
+ $('#towingEditor').showModal();
+}
+$('#addTow').onclick=()=>towingEditor();$('#towCancel').onclick=()=>$('#towingEditor').close();
+$('#towingForm').onsubmit=async e=>{e.preventDefault();const obj=Object.fromEntries(new FormData(e.target));try{await towingApi(obj.id?'PUT':'POST',obj);$('#towingEditor').close();await loadTowing()}catch(err){alert(err.message)}};
+$('#towingItems').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const id=b.dataset.towEdit||b.dataset.towDelete,t=towing.find(x=>x.id===id);if(!t)return;if(b.dataset.towEdit)towingEditor(t);else if(confirm('Delete this towing journey?'))try{await towingApi('DELETE',{id});await loadTowing()}catch(err){alert(err.message)}};
