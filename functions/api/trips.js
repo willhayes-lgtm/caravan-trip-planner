@@ -1,5 +1,5 @@
-const fields=['title','location','start_date','end_date','cost','paid','diesel','leave_days','status','notes','booking_ref','due_date','image_url','mileage','activities','stops','awning'];
-const numeric=['cost','paid','diesel','leave_days'];
+const fields=['title','location','start_date','end_date','cost','paid','diesel','leave_days','status','notes','booking_ref','due_date','image_url','mileage','activities','stops','awning','rating'];
+const numeric=['cost','paid','diesel','leave_days','rating'];
 const allowedStatuses=['planned','booked','completed','cancelled'];
 function validate(t){
  if(!t||typeof t!=='object')throw Error('Invalid trip');
@@ -8,6 +8,7 @@ function validate(t){
  if(t.end_date<t.start_date)throw Error('End date before start date');
  for(const n of [...numeric,'mileage'])if(t[n]!==''&&t[n]!=null&&(!Number.isFinite(Number(t[n]))||Number(t[n])<0))throw Error('Invalid '+n);
  if(t.status&&!allowedStatuses.includes(t.status))throw Error('Invalid status');
+ if(t.rating!==undefined&&t.rating!==null&&t.rating!==''&&(!Number.isInteger(Number(t.rating))||Number(t.rating)>10))throw Error('Rating must be a whole number from 0 to 10');
  if(String(t.image_url||'').length>2000)throw Error('Image URL too long');
  if(t.image_url){let u;try{u=new URL(t.image_url)}catch{throw Error('Invalid image URL')}if(!['http:','https:'].includes(u.protocol))throw Error('Image must use HTTP or HTTPS')}
  if(String(t.activities||'').length>4000)throw Error('Activities too long');
