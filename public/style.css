@@ -106,3 +106,8 @@ button.secondary{background:#e4f1f1;color:var(--ocean)}
 .trip-filters #filterCount{color:#5b777d;font-size:12px}
 .tow-miles{white-space:nowrap;font-size:19px;color:var(--teal)}
 @media(max-width:700px){.booking-summary{padding:13px}.payment-due{align-items:start;flex-direction:column;gap:4px}.trip-filters{align-items:stretch}.trip-filters button{width:100%}}
+
+/* Lifetime travel milestones */
+.stats .lifetime-stat{background:#e9f6f2;border:1px solid #b9ddd4}
+.stats .lifetime-stat strong{color:#123f52}
+.stats .lifetime-stat small{display:block;color:#53716e;font-size:12px;margin-top:5px}

@@ -49,7 +49,9 @@ async function api(method='GET',body){
 function render(){
  const active=trips.filter(t=>t.status!=='cancelled');
  const sum=k=>active.reduce((n,t)=>n+Number(t[k]||0),0),total=sum('cost')+sum('diesel');
- $('#stats').innerHTML=`<div class="stat"><span>Trips planned</span><strong>${active.length}</strong></div><div class="stat"><span>Nights away</span><strong>${active.reduce((n,t)=>n+days(t.start_date,t.end_date),0)}</strong></div><div class="stat"><span>Estimated total</span><strong>${money(total)}</strong></div><div class="stat"><span>Outstanding bookings</span><strong>${money(Math.max(0,sum('cost')-sum('paid')))}</strong></div><div class="stat"><span>Annual leave planned</span><strong>${leaveLabel(sum('leave_days'))}</strong></div>`;
+ const completed=active.filter(t=>t.status==='completed');
+ const completedNights=completed.reduce((n,t)=>n+days(t.start_date,t.end_date),0);
+ $('#stats').innerHTML=`<div class="stat lifetime-stat"><span>🌙 Nights completed</span><strong>${completedNights}</strong><small>Lifetime total</small></div><div class="stat lifetime-stat"><span>✓ Trips completed</span><strong>${completed.length}</strong><small>Lifetime total</small></div><div class="stat"><span>Trips on planner</span><strong>${active.length}</strong></div><div class="stat"><span>Nights across all trips</span><strong>${active.reduce((n,t)=>n+days(t.start_date,t.end_date),0)}</strong></div><div class="stat"><span>Estimated total</span><strong>${money(total)}</strong></div><div class="stat"><span>Outstanding bookings</span><strong>${money(Math.max(0,sum('cost')-sum('paid')))}</strong></div><div class="stat"><span>Annual leave planned</span><strong>${leaveLabel(sum('leave_days'))}</strong></div>`;
  countdown();
  const status=$('#filterStatus').value,order=$('#sortTrips').value;
  const visible=trips.filter(t=>status==='all'||t.status===status).sort((a,b)=>order==='costAsc'?tripTotal(a)-tripTotal(b):order==='costDesc'?tripTotal(b)-tripTotal(a):a.start_date.localeCompare(b.start_date));
