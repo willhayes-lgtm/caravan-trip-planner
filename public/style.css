@@ -111,3 +111,14 @@ button.secondary{background:#e4f1f1;color:var(--ocean)}
 .stats .lifetime-stat{background:#e9f6f2;border:1px solid #b9ddd4}
 .stats .lifetime-stat strong{color:#123f52}
 .stats .lifetime-stat small{display:block;color:#53716e;font-size:12px;margin-top:5px}
+
+/* Compact data-management controls in the header */
+.header-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.data-menu{position:relative;z-index:30}
+.data-menu>summary{cursor:pointer;list-style:none;border:1px solid #b7d7d8;border-radius:10px;padding:10px 14px;background:#fff;color:#123f52;font-weight:700;white-space:nowrap}
+.data-menu>summary::-webkit-details-marker{display:none}
+.data-menu>summary:focus-visible{outline:3px solid #238c9a;outline-offset:3px}
+.data-menu-panel{position:absolute;right:0;top:calc(100% + 8px);width:min(310px,calc(100vw - 28px));padding:18px;border:1px solid #d5e6e7;border-radius:14px;background:#fff;color:#123f52;box-shadow:0 14px 36px #123f5230;display:grid;gap:10px}
+.data-menu-panel p{margin:0;color:#536d75;font-size:13px}
+.data-menu-panel button{width:100%;text-align:left}
+@media(max-width:550px){.header-controls{width:100%;justify-content:space-between}.data-menu-panel{left:0;right:auto}}
