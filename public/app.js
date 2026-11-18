@@ -116,7 +116,7 @@ function readStops(){return [...document.querySelectorAll('.stop-row')].map(r=>(
 $('#addStop').onclick=()=>stopRow();
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{
  const page=b.dataset.page;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===b));
- for(const p of ['trips','wishlist','shopping'])document.querySelector('#'+p+'Page').hidden=p!==page;
+ for(const p of ['trips','wishlist','shopping','towing'])document.querySelector('#'+p+'Page').hidden=p!==page;
  if(page==='wishlist'||page==='shopping')loadLists();if(page==='towing')loadTowing();
 });
 async function listApi(kind,method='GET',body){
