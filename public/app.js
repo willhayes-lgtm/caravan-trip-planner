@@ -73,14 +73,13 @@ function render(){
   return `<article class="trip compact-trip">${photo(t)}<div class="trip-body">
     <div class="top"><div><h3>${safe(t.title)}</h3><div class="meta">${summaryBits}</div></div><span class="pill ${safe(t.status)}">${safe(t.status)}</span></div>
     ${past?(Number(t.rating)>0?`<div class="compact-highlight">⭐ Your rating: <strong>${Number(t.rating)}/10</strong></div>`:''):`<div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div>`}
-    ${!past&&balance>0?`<div class="compact-balance"><span>Outstanding balance</span><strong>${money(balance)}</strong></div>`:''}
+    <div class="glance-finance" aria-label="Trip costs"><div><small>Total cost</small><strong>${hasCosts?money(t.cost):'—'}</strong></div><div><small>Paid</small><strong>${hasCosts?money(t.paid):'—'}</strong></div><div><small>Balance</small><strong>${hasCosts?money(balance):'—'}</strong></div></div>
+    <div class="glance-essentials"><div><span>⛺ Awning</span><strong>${safe(t.awning||'Not decided')}</strong></div><div><span>🚙 Towing</span><strong>${mileage===null?'Not entered':`${(mileage*2).toLocaleString('en-GB')} mi return`}</strong></div></div>
     ${paymentHighlight}
     <details class="compact-details"><summary>View trip details <span class="compact-chevron" aria-hidden="true">⌄</span></summary>
       <div class="compact-details-body">
-        <div class="compact-facts">
-          <div><small>Awning</small><strong>${safe(t.awning||'Not decided')}</strong></div>
-          ${mileage!==null?`<div><small>Towing distance</small><strong>${mileage.toLocaleString('en-GB')} mi one way · ${(mileage*2).toLocaleString('en-GB')} mi return</strong></div>`:''}
-          ${hasCosts?`<div><small>Bookings</small><strong>${money(t.cost)}</strong></div><div><small>Paid</small><strong>${money(t.paid)}</strong></div><div><small>Balance</small><strong>${money(balance)}</strong></div>`:''}
+        <div class="compact-facts" ${mileage===null&&Number(t.diesel)<=0&&Number(t.leave_days)<=0?'hidden':''}>
+          ${mileage!==null?`<div><small>One-way mileage</small><strong>${mileage.toLocaleString('en-GB')} mi</strong></div>`:''}
           ${Number(t.diesel)>0?`<div><small>Diesel estimate</small><strong>${money(t.diesel)}</strong></div>`:''}
           ${Number(t.leave_days)>0?`<div><small>Annual leave</small><strong>${leaveLabel(Number(t.leave_days))}</strong></div>`:''}
         </div>
