@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Caravan Trip Planner · 2027</title><link rel="stylesheet" href="/style.css?v=20261118-2"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Caravan Trip Planner · 2027</title><link rel="stylesheet" href="/style.css?v=20261118-3"></head>
 <body><header><div><span class="eyebrow">THE HAYES FAMILY</span><h1>🚐 Caravan Trip Planner</h1><p>2027 holidays, bookings & budgets in one place.</p></div><button class="secondary" id="logout">Sign out</button></header>
-<main><section class="stats" id="stats"></section><section class="toolbar"><h2>Our adventures</h2><div class="actions"><button class="secondary" id="export">Export backup</button><button class="secondary" id="import">Import changes</button><input type="file" id="file" accept="application/json,.json" hidden><button id="add">+ Add trip</button></div></section><div id="notice" role="status"></div><section id="trips" class="cards"></section><p class="footnote">Distances are manually entered one-way road-mile estimates from Lymm Marina, not live route calculations. Images are supplied by you. Data is stored in Cloudflare D1.</p></main>
+<main><section class="next-trip" id="nextTrip" aria-label="Next upcoming trip"></section><section class="stats" id="stats"></section><section class="toolbar"><h2>Our adventures</h2><div class="actions"><button class="secondary" id="export">Export backup</button><button class="secondary" id="import">Import changes</button><input type="file" id="file" accept="application/json,.json" hidden><button id="add">+ Add trip</button></div></section><div id="notice" role="status"></div><section id="trips" class="cards"></section><p class="footnote">Distances are manually entered one-way road-mile estimates from Lymm Marina, not live route calculations. Images are supplied by you. Data is stored in Cloudflare D1.</p></main>
 <dialog id="editor"><form id="tripForm"><h2 id="formTitle">Edit trip</h2><input name="id" type="hidden"><div class="formgrid">
 <label>Trip name<input name="title" required maxlength="160"></label>
 <label>Location / campsite<input name="location" maxlength="200"></label>
@@ -19,4 +19,4 @@
 <label class="wide">Things to do on site / nearby (one per line)<textarea name="activities" rows="5" maxlength="4000" placeholder="Explore the harbour&#10;Visit the beach&#10;Try the on-site pool"></textarea></label>
 <label class="wide">Notes<textarea name="notes" rows="4" maxlength="4000"></textarea></label></div>
 <div class="actions"><button type="button" class="secondary" id="cancel">Cancel</button><button>Save trip</button></div></form></dialog>
-<script src="/app.js?v=20261118-2" defer></script></body></html>
+<script src="/app.js?v=20261118-3" defer></script></body></html>

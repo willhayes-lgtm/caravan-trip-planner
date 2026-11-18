@@ -1,35 +1,33 @@
-CARAVAN PLANNER UPDATE — PHOTOS, MILEAGE & THINGS TO DO
+CARAVAN TRIP PLANNER — NEXT TRIP + RETURN MILEAGE + BOOKINGS
 
-IMPORTANT: Back up your data first (Export backup in the existing planner).
-This update requires a one-time migration of the existing Cloudflare D1 database.
-Do not replace or delete your D1 database. Do not rerun migration.sql after it succeeds.
+This is an update to the existing website, not a new site.
+No D1 schema migration is required if the previous image/mileage/activities update is working.
 
-1. In Cloudflare dashboard, find the D1 database bound as DB to your Pages project.
-   Choose the PRODUCTION database and its SQL console.
-   Run each of the three ALTER TABLE statements from migration.sql ONCE.
-   If you see "duplicate column name", that particular statement was already applied.
-   These commands add empty fields; they do not delete existing trip records.
-
-2. In GitHub repository willhayes-lgtm/caravan-trip-planner, replace:
-   public/index.html
+1. In GitHub main branch replace:
    public/app.js
+   public/index.html
    public/style.css
-   functions/api/trips.js
-   Keep all other files, folders, Pages Functions, secrets and settings unchanged.
-   Preserve the folder structure exactly. Commit the changes.
+   (Do not upload these into the repository root.)
+2. Commit changes and wait for Cloudflare Pages production deployment.
+   Build output directory should be 'public'.
+3. Back up your current live trip data using Export backup.
+4. Optionally use Import changes to import:
+   caravan-planner-import-with-booking-details.json
+   This import preserves trip IDs, and adds:
+   Min-y-don reference B-2VZPETT, due 26 February 2027.
+   Cornwall references for Polmanter and Monkey Tree, with earliest due date
+   25 June 2027 in the due-date field; Polmanter due 4 July 2027 in notes.
+   It also carries forward photos, mileage and activity suggestions from
+   the earlier enriched import. Confirm any local edits made since that file.
+   Import updates ALL 10 trip records, so recent edits to any trip may be overwritten.
 
-3. In Cloudflare Pages, deploy the latest main commit.
-   The Pages build output directory should be public, not /.
-   Open the website and refresh; index.html now uses versioned JS/CSS URLs.
-
-4. Edit a trip and paste a direct public HTTPS photo URL, one-way road mileage
-   from Lymm Marina, and one activity per line. Save the trip.
-   Mileage is manually entered; the website does NOT calculate towing routes.
-   Images are URL-linked, not uploaded or automatically sourced.
-   Activities are user-entered, not automatically researched.
-
-5. Existing trips initially show a photo placeholder, mileage 'Not set',
-   and an empty expandable ideas section until you fill them in.
-
-Note: The annual-leave tile is retained. The app uses an 8-hour working day.
-For 2.5 hours of leave, enter 0.3125 days.
+DISPLAY:
+- Round-trip mileage = 2 x manually entered one-way mileage.
+  This is an approximation and excludes multi-stop travel and local excursions.
+- Booking details display when booking reference and/or due date exists.
+- The Next Trip banner shows the nearest non-cancelled trip that has not ended,
+  with a days/hours/minutes countdown to local midnight on the arrival date.
+  During the trip it displays 'On your trip!'. Countdown updates every minute.
+- No booking reference was available for Hartington Hills, so it is left blank.
+- Cornwall is one combined trip with two site booking references. The main
+  due date shows the earliest; both dates are recorded in notes.

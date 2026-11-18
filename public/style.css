@@ -40,3 +40,14 @@ label.wide{grid-column:1/-1}#notice{margin-bottom:12px;color:#a13b3b}
 .login{max-width:430px;margin:12vh auto}.login button{margin-top:15px;width:100%}
 @media(max-width:950px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){header{padding:25px 18px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:1fr}.toolbar{align-items:start;flex-direction:column}.formgrid{grid-template-columns:1fr}.stat strong{font-size:24px}}
+
+.next-trip{display:flex;align-items:center;justify-content:space-between;gap:22px;background:#123f48;color:#fff;border-radius:18px;padding:24px;margin-bottom:24px;flex-wrap:wrap}
+.next-trip .eyebrow{color:#a7d9d0}.next-trip h2{margin:8px 0}.next-trip p{color:#cde2e2;margin:0 0 12px}
+.next-trip .countdown{display:flex;gap:10px;align-items:center}
+.countdown>div{background:#ffffff1a;border-radius:12px;min-width:76px;padding:12px;text-align:center}
+.countdown strong{font-size:29px;display:block}.countdown small{color:#cde2e2}
+.next-trip-empty{color:#cde2e2}
+.booking-info{border-radius:12px;background:#eef7f4;padding:12px 14px;margin:16px 0;display:grid;gap:7px;font-size:14px}
+.booking-refs{white-space:pre-wrap;overflow-wrap:anywhere}
+.mileage strong+strong{font-size:16px;color:#137d72}
+@media(max-width:700px){.next-trip{padding:20px}.countdown>div{min-width:68px}.countdown strong{font-size:24px}}
