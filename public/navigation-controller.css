@@ -1,6 +1,7 @@
-/* Authoritative page visibility: legacy scripts cannot override this with inline styles. */
+/* Authoritative visibility and selection: one section, one active menu item. */
 body[data-current-page] #dashboardPage,body[data-current-page] #tripsPage,body[data-current-page] #wishlistPage,body[data-current-page] #shoppingPage,body[data-current-page] #towingPage,body[data-current-page] #maintenancePage,body[data-current-page] #checklistsPage{display:none!important}
 body[data-current-page="dashboard"] #dashboardPage,body[data-current-page="trips"] #tripsPage,body[data-current-page="wishlist"] #wishlistPage,body[data-current-page="shopping"] #shoppingPage,body[data-current-page="towing"] #towingPage,body[data-current-page="maintenance"] #maintenancePage,body[data-current-page="profile"] #checklistsPage,body[data-current-page="checklists"] #checklistsPage{display:block!important}
 body[data-current-page="profile"] #phaseLists,body[data-current-page="checklists"] #phaseProfile{display:none!important}
 body[data-current-page="profile"] #phaseProfile,body[data-current-page="checklists"] #phaseLists{display:block!important}
 body[data-current-page="dashboard"] .ux-page-pinbar{display:none!important}
+.main-nav [aria-current="page"]{background:#dff1ef!important;color:#126773!important;box-shadow:inset 3px 0 #238c9a}
