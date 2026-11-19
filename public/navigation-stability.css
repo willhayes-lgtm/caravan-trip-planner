@@ -1,0 +1,2 @@
+/* Ensure the HTML hidden attribute wins over all legacy layout styles. */
+[hidden], #dashboardPage[hidden], #maintenancePage[hidden], #checklistsPage[hidden], #tripsPage[hidden], #wishlistPage[hidden], #shoppingPage[hidden], #towingPage[hidden], #phaseLists[hidden], #phaseProfile[hidden] { display:none!important; }
