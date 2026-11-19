@@ -1,0 +1,12 @@
+/* Unified page headers and per-page dashboard actions */
+.phase-content>header{display:flex!important;align-items:center;justify-content:space-between;gap:14px;padding:23px 30px;background:linear-gradient(125deg,#123f52,#195d6e);color:white}
+.phase-content>header h1{font-size:clamp(22px,3vw,31px)}.phase-content>header p{margin:4px 0}.phase-content>header .back{display:none}
+.ux-page-pinbar{display:flex;justify-content:flex-end;margin:0 0 18px}.ux-page-pinbar button{font-size:13px;padding:9px 13px}.ux-page-pinbar button[aria-pressed="true"]{background:#e1f3ef;color:#126773;border:1px solid #b5ddd5}
+.ux-dashboard .ux-page-pinbar{display:none}
+.ux-maintenance-card{border-left:4px solid #238c9a}.ux-maintenance-card h3{margin:8px 0}.ux-maint-summary{font-weight:700}.ux-maint-list{display:grid;gap:10px;margin:14px 0}.ux-maint-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #e3eeee;font-size:13px}.ux-maint-item strong{white-space:nowrap}.ux-overdue{color:#ae3535}.ux-soon{color:#956017}.ux-muted,.ux-pin-empty{color:#607980}.ux-maint-link{font-weight:750;color:#176f7a;text-decoration:none}
+.ux-pinned-section{margin-top:24px}.ux-pinned-section h3{font-size:19px}.ux-pin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.ux-pin-card{display:block;padding:19px;background:white;border:1px solid #dce9e9;border-radius:14px;color:#123f52;text-decoration:none;font-weight:700}.ux-pin-card:hover{border-color:#238c9a;background:#f1faf9}
+/* Profile and checklists are distinct destinations, not a user-facing tab switch. */
+#checklistsPage>.phase-tabs{display:none!important}
+#checklistsPage.ux-profile-view #phaseLists{display:none!important}
+#checklistsPage.ux-checklists-view #phaseProfile{display:none!important}
+@media(max-width:700px){.phase-content>header{padding:18px}.ux-maint-item{align-items:flex-start}.ux-maint-item span{max-width:65%}}
