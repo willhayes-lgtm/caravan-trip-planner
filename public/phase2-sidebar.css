@@ -1,0 +1,16 @@
+/* Phase 2 self-contained sidebar: no dependency on dynamically injected homepage navigation. */
+body:has(.phase-shell)>header{display:none!important}
+.phase-shell{display:grid;grid-template-columns:228px minmax(0,1fr);min-height:100vh}
+.phase-sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;background:#fff;border-right:1px solid #dce9e9;padding:22px 12px;overflow-y:auto;z-index:80}
+.phase-brand{padding:8px 10px 20px;border-bottom:1px solid #e5eeee;margin-bottom:12px;color:#123f52;font-size:17px;line-height:1.4}
+.phase-brand strong{font-size:17px}.phase-brand small{display:block;margin-left:27px;font-size:12px;color:#607980}
+.phase-side-links{display:flex;flex-direction:column;gap:2px}
+.phase-side-links a,.phase-account a{display:block;padding:11px 12px;color:#123f52;text-decoration:none;font-size:13.5px;font-weight:650;line-height:1.35;border-radius:10px}
+.phase-side-links a:hover,.phase-account a:hover{background:#e9f4f3}
+.phase-side-links a[aria-current="page"]{background:#dff1ef;color:#126773;box-shadow:inset 3px 0 #238c9a;font-weight:800}
+.phase-group{padding:20px 12px 7px;font-size:10px;font-weight:800;letter-spacing:1.4px;color:#71868a}
+.phase-account{margin-top:auto;border-top:1px solid #e5eeee;padding-top:12px}
+.phase-content{min-width:0}.phase-content main.phase2{max-width:1280px;padding:30px 24px 80px;margin:0 auto}
+.phase-menu-toggle,.phase-menu-backdrop{display:none!important}
+.phase2 .tabs{display:none!important}
+@media(max-width:900px){.phase-shell{display:block}.phase-sidebar{position:fixed;left:0;top:0;bottom:0;width:min(290px,86vw);height:100vh;transform:translateX(-110%);transition:transform .2s;box-shadow:8px 0 24px #123f5222}.phase-sidebar.open{transform:translateX(0)}.phase-menu-toggle{display:block!important;position:sticky;top:0;z-index:60;margin:10px 16px;background:#fff!important;color:#123f52!important;border:1px solid #dce9e9!important}.phase-menu-backdrop.open{display:block!important;position:fixed;inset:0;background:#102d3988!important;z-index:70;border:0;border-radius:0}.phase-content main.phase2{padding:18px 16px 65px}}
