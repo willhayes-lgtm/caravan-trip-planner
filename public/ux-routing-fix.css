@@ -1,0 +1,5 @@
+/* Guarantee that inactive pages, sections and dashboard controls cannot remain visible. */
+#dashboardPage[hidden],#tripsPage[hidden],#wishlistPage[hidden],#shoppingPage[hidden],#towingPage[hidden],#maintenancePage[hidden],#checklistsPage[hidden],#serviceTab[hidden],#payloadTab[hidden],#phaseLists[hidden],#phaseProfile[hidden],.ux-page-pinbar[hidden]{display:none!important}
+.main-nav .nav-button:not(.active),.main-nav .ux-nav-link:not(.active){box-shadow:none}
+.phase-content>header{background:linear-gradient(125deg,#123f52,#195d6e)!important;color:#fff!important;min-height:120px}
+.phase-content>header h1{font-size:clamp(25px,4vw,38px);margin:7px 0}.phase-content>header p{color:#cde2e2}
