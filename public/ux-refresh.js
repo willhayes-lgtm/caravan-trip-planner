@@ -28,9 +28,7 @@ if(!phase){
  const move=()=>{if(checklist()){nav.append(profile);nav.append(checklist())}if(maintenance())nav.append(maintenance());};
  move();const observer=new MutationObserver(()=>{if(checklist()&&!nav.contains(profile))move();if(checklist()&&profile.nextElementSibling!==checklist())move()});observer.observe(nav,{childList:true});
 
- nav.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b)return;if(b.dataset.page==='dashboard'){e.stopImmediatePropagation();showDashboard()}else{hideDashboard();updateActiveSoon()}},true);
- window.addEventListener('hashchange',routeHash);
- setTimeout(()=>{if(location.hash==='#profile'||location.hash==='#checklists'||location.hash==='#maintenance')routeHash();else showDashboard()},450);
+ // Navigation is handled by navigation-controller.js.
  loadDashboard();
  function hideDashboard(){const d=$('#dashboardPage');if(d)d.hidden=true}
  function showDashboard(){const d=$('#dashboardPage');if(!d)return;$$('main > section, main > div[id$="Page"]').forEach(el=>{if(el!==d)el.hidden=true});d.hidden=false;nav.querySelectorAll('.nav-button').forEach(b=>b.classList.toggle('active',b.dataset.page==='dashboard'));history.replaceState(null,'',location.pathname);}

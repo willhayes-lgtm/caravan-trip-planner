@@ -19,6 +19,6 @@ nav.addEventListener('click',e=>{const b=e.target.closest('[data-page="checklist
 function route(){if(location.hash==='#profile')select('profile');else if(location.hash==='#checklists')select('lists')}
 window.addEventListener('hashchange',route);setTimeout(route,1100);
 }
-function init(){pinControl();dashboard();separateProfile();}
+function init(){pinControl();dashboard();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

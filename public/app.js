@@ -137,11 +137,8 @@ function readStops(){return [...document.querySelectorAll('.stop-row')].map(r=>(
  notes:r.querySelector('.stop-notes').value.trim()
 })).filter(s=>s.name)}
 $('#addStop').onclick=()=>stopRow();
-document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{
- const page=b.dataset.page;document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x===b));
- for(const p of ['trips','wishlist','shopping','towing'])document.querySelector('#'+p+'Page').hidden=p!==page;
- if(page==='wishlist'||page==='shopping')loadLists();if(page==='towing')loadTowing();
-});
+// Central router owns navigation. This module only loads section data.
+window.addEventListener('planner:navigate',e=>{const page=e.detail.page;if(page==='wishlist'||page==='shopping')loadLists();if(page==='towing')loadTowing();});
 async function listApi(kind,method='GET',body){
  const r=await fetch('/api/'+kind,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
  const j=await r.json();if(!r.ok)throw Error(j.error||'Request failed');return j;
