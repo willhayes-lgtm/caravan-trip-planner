@@ -1,10 +1,5 @@
-export async function onRequestGet({env}) {
- try { const row=await env.DB.prepare('SELECT make,model,model_year FROM caravan_profile WHERE id=1').first();return Response.json(row||{make:'',model:'',model_year:null}); }
- catch {return Response.json({error:'Caravan profile unavailable. Run the D1 migration.'},{status:503})}
-}
-export async function onRequestPut({request,env}) {
- try {const v=await request.json(),make=String(v.make||'').trim(),model=String(v.model||'').trim(),year=Number(v.model_year);
- if(!make||!model||make.length>100||model.length>150||!Number.isInteger(year)||year<1900||year>2100)throw Error('Enter a valid make, model and year.');
- await env.DB.prepare('INSERT INTO caravan_profile(id,make,model,model_year,updated_at) VALUES(1,?,?,?,datetime(\'now\')) ON CONFLICT(id) DO UPDATE SET make=excluded.make,model=excluded.model,model_year=excluded.model_year,updated_at=datetime(\'now\')').bind(make,model,year).run();return Response.json({make,model,model_year:year});
- }catch(e){return Response.json({error:e.message},{status:400})}
-}
+const FIELDS=['make','model','model_year','length_mm','width_mm','height_mm','mtplm_kg','miro_kg','noseweight_limit_kg','tyre_size','tyre_pressure_psi','wheel_torque_nm','axles','heating','fridge','toilet','battery','solar','motor_mover','purchase_date','purchase_price','warranty_notes','cris_reference'];
+const NUMERIC=new Set(['model_year','length_mm','width_mm','height_mm','mtplm_kg','miro_kg','noseweight_limit_kg','tyre_pressure_psi','wheel_torque_nm','axles','purchase_price']);
+const json=(v,s=200)=>Response.json(v,{status:s});
+export async function onRequestGet({env}){try{return json(await env.DB.prepare('SELECT * FROM caravan_profile WHERE id=1').first()||{});}catch{return json({error:'Caravan profile unavailable. Run the Phase 1 D1 migration.'},503)}}
+export async function onRequestPut({request,env}){try{const v=await request.json(),existing=await env.DB.prepare('SELECT * FROM caravan_profile WHERE id=1').first()||{},data={};for(const k of FIELDS)if(!Object.prototype.hasOwnProperty.call(v,k))v[k]=existing[k];for(const k of FIELDS){let x=v[k];if(NUMERIC.has(k)){if(x===''||x===undefined||x===null)x=null;else{x=Number(x);if(!Number.isFinite(x)||x<0||x>10000000)throw Error('Invalid value for '+k);}}else{x=String(x??'').trim();if(x.length>2000)throw Error('Field too long: '+k);if(k==='purchase_date'&&x&&!/^\d{4}-\d{2}-\d{2}$/.test(x))throw Error('Invalid purchase date');if(k==='purchase_date'&&!x)x=null;}data[k]=x;}if(!data.make||!data.model)throw Error('Make and model are required');if(data.model_year!==null&&(!Number.isInteger(data.model_year)||data.model_year<1900||data.model_year>2100))throw Error('Invalid model year');const cols=FIELDS.join(','),qs=FIELDS.map(()=>'?').join(','),updates=FIELDS.map(k=>`${k}=excluded.${k}`).join(',');await env.DB.prepare(`INSERT INTO caravan_profile(id,${cols},updated_at) VALUES(1,${qs},datetime('now')) ON CONFLICT(id) DO UPDATE SET ${updates},updated_at=datetime('now')`).bind(...FIELDS.map(k=>data[k])).run();return json(data);}catch(e){return json({error:e.message},400)}}
