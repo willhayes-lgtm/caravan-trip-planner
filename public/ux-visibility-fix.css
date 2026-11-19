@@ -1,0 +1,2 @@
+/* Hidden views must never be shown by layout display rules. */
+#dashboardPage[hidden],#tripsPage[hidden],#wishlistPage[hidden],#shoppingPage[hidden],#towingPage[hidden],#maintenancePage[hidden],#checklistsPage[hidden],#phaseLists[hidden],#phaseProfile[hidden],.ux-page-pinbar[hidden]{display:none!important}
