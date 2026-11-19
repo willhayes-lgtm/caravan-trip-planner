@@ -13,8 +13,8 @@ function update(){
  const wish=find('wishlist');clean(wish,'♡  Wish List');
  const shopping=find('shopping');clean(shopping,'▤  Shopping List');
  const towing=find('towing');clean(towing,'↗  Towing Log');
- const service=links.find(el=>el.getAttribute('onclick')?.includes('#service')||el.getAttribute('href')==='/phase2.html#service');clean(service,'⚒  Service History');
- const payload=links.find(el=>el.getAttribute('onclick')?.includes('#payload')||el.getAttribute('href')==='/phase2.html#payload');clean(payload,'⚖  Payload');
+ const service=links.find(el=>el.dataset.page==='service'||el.getAttribute('onclick')?.includes('#service')||el.getAttribute('href')==='/phase2.html#service');clean(service,'⚒  Service History');
+ const payload=links.find(el=>el.dataset.page==='payload'||el.getAttribute('onclick')?.includes('#payload')||el.getAttribute('href')==='/phase2.html#payload');clean(payload,'⚖  Payload');
  const profile=nav.querySelector('[data-ux-profile]')||nav.querySelector('[data-uxProfile]');clean(profile,'▣  Profile');
  const checklist=find('checklists');clean(checklist,'☑  Checklists');
  const maintenance=find('maintenance');clean(maintenance,'⚙  Maintenance');

@@ -1,0 +1,5 @@
+
+#servicePage .phase2,#payloadPage .phase2{max-width:none;margin:0;padding:0}
+#servicePage,#payloadPage{padding-top:12px}
+main>.tabs{display:none!important}
+#servicePage[hidden],#payloadPage[hidden]{display:none!important}

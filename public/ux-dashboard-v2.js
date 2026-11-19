@@ -2,7 +2,7 @@
 (()=>{'use strict';
 const phase=location.pathname.includes('phase2.html');
 const names={trips:'My Trips',wishlist:'Wish List',towing:'Towing Log',shopping:'Shopping List',profile:'Caravan Profile',checklists:'Checklists',maintenance:'Maintenance',service:'Service History',payload:'Payload Calculator'};
-const hrefs={trips:'/#trips',wishlist:'/#wishlist',towing:'/#towing',shopping:'/#shopping',profile:'/#profile',checklists:'/#checklists',maintenance:'/#maintenance',service:'/phase2.html#service',payload:'/phase2.html#payload'};
+const hrefs={trips:'/#trips',wishlist:'/#wishlist',towing:'/#towing',shopping:'/#shopping',profile:'/#profile',checklists:'/#checklists',maintenance:'/#maintenance',service:'/#service',payload:'/#payload'};
 const store='caravan-dashboard-pins-v1';let pins=[];try{pins=JSON.parse(localStorage.getItem(store)||'[]');if(!Array.isArray(pins))pins=[]}catch{pins=[]}
 const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text)e.textContent=text;return e};
 function save(){localStorage.setItem(store,JSON.stringify(pins))}

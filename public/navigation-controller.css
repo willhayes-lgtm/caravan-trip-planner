@@ -5,3 +5,6 @@ body[data-current-page="profile"] #phaseLists,body[data-current-page="checklists
 body[data-current-page="profile"] #phaseProfile,body[data-current-page="checklists"] #phaseLists{display:block!important}
 body[data-current-page="dashboard"] .ux-page-pinbar{display:none!important}
 .main-nav [aria-current="page"]{background:#dff1ef!important;color:#126773!important;box-shadow:inset 3px 0 #238c9a}
+
+body[data-current-page] #servicePage,body[data-current-page] #payloadPage{display:none!important}
+body[data-current-page="service"] #servicePage,body[data-current-page="payload"] #payloadPage{display:block!important}

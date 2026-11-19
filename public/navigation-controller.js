@@ -1,7 +1,7 @@
 /* Caravan Trip Planner: sole owner of page selection and sidebar active state. */
 (()=>{'use strict';
 if(!['/','/index.html'].includes(location.pathname))return;
-const pages={dashboard:'dashboardPage',trips:'tripsPage',wishlist:'wishlistPage',shopping:'shoppingPage',towing:'towingPage',maintenance:'maintenancePage',profile:'checklistsPage',checklists:'checklistsPage'};
+const pages={dashboard:'dashboardPage',trips:'tripsPage',wishlist:'wishlistPage',shopping:'shoppingPage',towing:'towingPage',maintenance:'maintenancePage',profile:'checklistsPage',checklists:'checklistsPage',service:'servicePage',payload:'payloadPage'};
 let current='dashboard';
 const nav=()=>document.querySelector('.main-nav');
 const keyOf=el=>el?.matches('[data-ux-profile],[data-uxProfile]')?'profile':el?.dataset.page;
