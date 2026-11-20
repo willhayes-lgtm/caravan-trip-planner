@@ -1,0 +1,7 @@
+/* Clear arrival and departure times on trip cards and itinerary stops. */
+.trip-time-schedule{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.trip-time-slot{display:flex;align-items:center;gap:11px;background:#eef7f7;border:1px solid #d5e8e8;border-radius:12px;padding:10px 12px;min-width:0}
+.trip-time-icon{display:grid;place-items:center;flex:0 0 32px;height:32px;border-radius:9px;background:#d3eeee;color:#125d67;font-weight:800;font-size:19px}
+.trip-time-slot>div{display:grid;gap:2px;min-width:0}.trip-time-slot small{font-size:11px;color:#52737a;font-weight:650}.trip-time-slot strong{font-size:18px;color:#123f52;letter-spacing:.2px;font-variant-numeric:tabular-nums}
+.trip-stop-times{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.trip-stop-time{display:inline-flex;align-items:center;gap:5px;border:1px solid #d5e8e8;background:#edf7f7;color:#164f5b;padding:6px 9px;border-radius:8px;font-size:12px}.trip-stop-time b{font-weight:750}
+@media(max-width:480px){.trip-time-schedule{grid-template-columns:1fr}.trip-time-slot strong{font-size:17px}}

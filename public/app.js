@@ -36,7 +36,7 @@ function daysToGo(t){
 function stopsFor(t){try{const v=typeof t.stops==='string'?JSON.parse(t.stops||'[]'):t.stops;return Array.isArray(v)?v:[]}catch{return []}}
 function stopTimeline(t){
  const stops=stopsFor(t);if(!stops.length)return '';
- return `<details class="stop-timeline"><summary>🗺️ View itinerary <span>${stops.length} stops</span></summary><ol>${stops.map((s,i)=>`<li><strong>${safe(s.name)}</strong><div class="meta">${s.arrival?date(s.arrival):'Date TBC'}${s.departure?' – '+date(s.departure):''}${s.arrival&&s.departure?' · '+days(s.arrival,s.departure)+' nights':''}</div>${s.checkin_time||s.checkout_time?`<div class="meta">Check-in ${safe(s.checkin_time||'—')} · Check-out ${safe(s.checkout_time||'—')}</div>`:''}${s.reference?`<div class="meta">Booking ref: ${safe(s.reference)}</div>`:''}${s.notes?`<div class="meta">${safe(s.notes)}</div>`:''}</li>`).join('')}</ol></details>`;
+ return `<details class="stop-timeline"><summary>🗺️ View itinerary <span>${stops.length} stops</span></summary><ol>${stops.map((s,i)=>`<li><strong>${safe(s.name)}</strong><div class="meta">${s.arrival?date(s.arrival):'Date TBC'}${s.departure?' – '+date(s.departure):''}${s.arrival&&s.departure?' · '+days(s.arrival,s.departure)+' nights':''}</div>${s.checkin_time||s.checkout_time?`<div class="trip-stop-times">${s.checkin_time?`<span class="trip-stop-time">↘ <b>Check-in</b> ${safe(s.checkin_time)}</span>`:''}${s.checkout_time?`<span class="trip-stop-time">↗ <b>Check-out</b> ${safe(s.checkout_time)}</span>`:''}</div>`:''}${s.reference?`<div class="meta">Booking ref: ${safe(s.reference)}</div>`:''}${s.notes?`<div class="meta">${safe(s.notes)}</div>`:''}</li>`).join('')}</ol></details>`;
 }
 const placeholder=`<div class="trip-placeholder" aria-label="No photo added">🚐<span>Photo coming soon</span></div>`;
 function photo(t){
@@ -44,8 +44,17 @@ function photo(t){
  return `<img class="trip-image" src="${safe(t.image_url)}" alt="Photo of ${safe(t.location||t.title)}" loading="lazy" referrerpolicy="no-referrer">`;
 }
 async function api(method='GET',body){
- const r=await fetch('/api/trips',{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
- const j=await r.json();if(!r.ok)throw Error(j.error||'Request failed');return j;
+ const call=async()=>{
+  let r;
+  try{r=await fetch('/api/trips',{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store'})}
+  catch(e){const err=new Error('Connection interrupted. Your changes are still in the form; please try saving again.');err.transient=true;throw err}
+  const raw=await r.text();let j;
+  try{j=JSON.parse(raw)}catch{j=null}
+  if(!r.ok){const err=new Error(j?.error||`Unable to save trip (HTTP ${r.status}). Please try again.`);err.transient=r.status>=500||r.status===429;throw err}
+  if(j===null)throw Error('Unexpected response from the server. Please refresh and check your trip before saving again.');
+  return j;
+ };
+ try{return await call()}catch(err){if(method==='PUT'&&err.transient)return call();throw err}
 }
 function render(){
  const active=trips.filter(t=>t.status!=='cancelled');
@@ -69,10 +78,11 @@ function render(){
   const stops=stopsFor(t),hasCosts=Number(t.cost)>0||Number(t.paid)>0;
   const refs=stops.filter(s=>s.reference).length||(t.booking_ref?String(t.booking_ref).split(/\r?\n/).filter(Boolean).length:0);
   const paymentHighlight=!past&&balance>0&&t.due_date?`<div class="compact-due">💳 Next payment: <strong>${date(t.due_date)}</strong></div>`:'';
-  const summaryBits=[`${date(t.start_date)}${t.checkin_time?' '+safe(t.checkin_time):''} – ${date(t.end_date)}${t.checkout_time?' '+safe(t.checkout_time):''}`,`${days(t.start_date,t.end_date)} nights`,stops.length?`${stops.length} stops`:null].filter(Boolean).join(' · ');
+  const summaryBits=[`${date(t.start_date)} – ${date(t.end_date)}`,`${days(t.start_date,t.end_date)} nights`,stops.length?`${stops.length} stops`:null].filter(Boolean).join(' · ');
   return `<article class="trip compact-trip">${photo(t)}<div class="trip-body">
     <div class="top"><div><h3>${safe(t.title)}</h3><div class="meta">${summaryBits}</div></div><span class="pill ${safe(t.status)}">${safe(t.status)}</span></div>
     ${past?(Number(t.rating)>0?`<div class="compact-highlight">⭐ Your rating: <strong>${Number(t.rating)}/10</strong></div>`:''):`<div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div>`}
+    ${t.checkin_time||t.checkout_time?`<div class="trip-time-schedule" aria-label="Campsite arrival and departure times">${t.checkin_time?`<div class="trip-time-slot"><span class="trip-time-icon" aria-hidden="true">↘</span><div><small>Check-in · ${date(t.start_date)}</small><strong>${safe(t.checkin_time)}</strong></div></div>`:''}${t.checkout_time?`<div class="trip-time-slot"><span class="trip-time-icon" aria-hidden="true">↗</span><div><small>Check-out · ${date(t.end_date)}</small><strong>${safe(t.checkout_time)}</strong></div></div>`:''}</div>`:''}
     <div class="glance-finance" aria-label="Trip costs"><div><small>Total cost</small><strong>${hasCosts?money(t.cost):'—'}</strong></div><div><small>Paid</small><strong>${hasCosts?money(t.paid):'—'}</strong></div><div><small>Balance</small><strong>${hasCosts?money(balance):'—'}</strong></div></div>
     <div class="glance-essentials"><div><span>⛺ Awning</span><strong>${safe(t.awning||'Not decided')}</strong></div><div><span>🚙 Towing</span><strong>${mileage===null?'Not entered':`${(mileage*2).toLocaleString('en-GB')} mi return`}</strong></div></div>
     ${paymentHighlight}
@@ -106,7 +116,12 @@ $('#trips').onclick=async e=>{
 };
 $('#tripForm').onsubmit=async e=>{
  e.preventDefault();const f=e.target,obj=Object.fromEntries(new FormData(f));obj.stops=JSON.stringify(readStops());
- try{await api(obj.id?'PUT':'POST',obj);$('#editor').close();await reload()}catch(err){alert(err.message)}
+ const submit=f.querySelector('button[type="submit"]')||f.querySelector('button:not([type])');
+ if(submit?.disabled)return;
+ if(submit)submit.disabled=true;
+ try{await api(obj.id?'PUT':'POST',obj);$('#editor').close();await reload()}
+ catch(err){alert(err.message+'\n\nYour edits have been kept in the form.');}
+ finally{if(submit)submit.disabled=false}
 };
 $('#export').onclick=()=>{
  const blob=new Blob([JSON.stringify({format:'caravan-planner-v1',exported_at:new Date().toISOString(),trips},null,2)],{type:'application/json'});

@@ -1,0 +1,12 @@
+/* Dashboard notification centre — one priority-ordered source of actions. */
+#maintenanceAlerts,#uxMaintenanceCard,#uxCoverCard{display:none!important}
+.ux-notification-centre{background:#fff;border:1px solid #dce9e9;border-radius:16px;padding:20px 22px;margin:0 0 18px;color:#153f50}
+.ux-notification-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.ux-notification-head h3{font-size:21px;margin:0}.ux-notification-count{font-size:12px;font-weight:700;background:#eaf1f2;border-radius:999px;padding:6px 10px}
+.ux-notification-list{display:grid;gap:10px}.ux-notification-item{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 16px;border-radius:11px;border:1px solid transparent;border-left-width:4px}
+.ux-notification-critical{background:#fff1f0;border-color:#f2ceca;border-left-color:#c93e35}.ux-notification-warning{background:#fff8eb;border-color:#f0dfbd;border-left-color:#d7942b}
+.ux-notification-main{display:grid;gap:5px;min-width:0}.ux-notification-main strong{font-size:15px}.ux-notification-meta{font-size:13px;color:#5b6e75}
+.ux-notification-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}.ux-notification-pill{font-size:12px;font-weight:750;border-radius:999px;padding:4px 9px}
+.ux-notification-critical .ux-notification-pill{color:#992f2a;background:#fbd9d5}.ux-notification-warning .ux-notification-pill{color:#865309;background:#ffe8bb}
+.ux-notification-link{font-size:13px;font-weight:700;color:#155f70;text-decoration:underline}.ux-notification-empty{padding:14px 0;color:#386b5a}.ux-notification-loading,.ux-notification-partial{font-size:13px;color:#6b747a}
+@media(max-width:650px){.ux-notification-centre{padding:15px}.ux-notification-item{align-items:flex-start;flex-direction:column}.ux-notification-right{width:100%;flex-direction:row;justify-content:space-between;align-items:center}}
