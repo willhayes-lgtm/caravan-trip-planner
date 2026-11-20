@@ -10,3 +10,9 @@
 #checklistsPage.ux-profile-view #phaseLists{display:none!important}
 #checklistsPage.ux-checklists-view #phaseProfile{display:none!important}
 @media(max-width:700px){.phase-content>header{padding:18px}.ux-maint-item{align-items:flex-start}.ux-maint-item span{max-width:65%}}
+
+/* Keep the left sidebar stationary on desktop, with its own overflow. */
+@media(min-width:901px){.ux-shell{align-items:start}.ux-sidebar{position:sticky;top:0;height:100vh;height:100dvh;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;align-self:start}}
+/* Remove individual dashboard shortcuts without removing their source pages. */
+.ux-pin-tile{position:relative;min-width:0}.ux-pin-tile .ux-pin-card{padding-right:90px;min-height:66px;box-sizing:border-box}.ux-pin-remove{position:absolute;right:10px;top:50%;transform:translateY(-50%);padding:7px 9px!important;font-size:12px!important;border:1px solid #c6dfe0!important;border-radius:8px;background:#fff!important;color:#34555c!important}.ux-pin-remove:hover{background:#fff1f1!important;color:#9c3131!important}.ux-pin-remove:focus-visible{outline:3px solid #238c9a;outline-offset:2px}
+#uxMaintenanceCard{margin-bottom:16px}

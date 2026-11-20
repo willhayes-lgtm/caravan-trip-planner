@@ -1,0 +1,12 @@
+/* Compact, scalable towing history. Keeps existing Edit/Delete buttons. */
+#towingPage #towingItems.tow-list-view{display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid #dce9e9;border-radius:15px;overflow:hidden}
+#towingPage #towingItems.tow-list-view .list-card{border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important;padding:13px 18px!important;background:#fff!important;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:20px;align-items:center;border-bottom:1px solid #e4eeee!important}
+#towingPage #towingItems.tow-list-view .list-card:last-child{border-bottom:0!important}
+#towingPage #towingItems.tow-list-view .list-card:nth-child(even){background:#f7fbfa!important}
+#towingPage #towingItems.tow-list-view .list-card .top{min-width:0;display:flex;align-items:center;justify-content:space-between;gap:14px}
+#towingPage #towingItems.tow-list-view .list-card h3{font-size:15px;margin:0 0 3px;overflow-wrap:anywhere}
+#towingPage #towingItems.tow-list-view .list-card .meta{font-size:12px;margin:3px 0;color:#607980}
+#towingPage #towingItems.tow-list-view .list-card .actions{margin:0!important;display:flex;gap:6px;justify-content:flex-end}
+#towingPage #towingItems.tow-list-view .list-card .actions button{padding:7px 10px;font-size:12px}
+#towingPage #towingItems.tow-list-view .tow-miles{white-space:nowrap;font-size:14px}
+@media(max-width:650px){#towingPage #towingItems.tow-list-view .list-card{grid-template-columns:1fr;gap:7px;padding:12px!important}#towingPage #towingItems.tow-list-view .list-card .actions{justify-content:flex-start}}

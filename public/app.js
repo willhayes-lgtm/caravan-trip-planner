@@ -203,6 +203,7 @@ async function loadTowing(){try{towing=await towingApi();renderTowing()}catch(e)
 function renderTowing(){
  const total=towing.reduce((n,t)=>n+Number(t.miles||0),0),year=new Date().getFullYear(),yearMiles=towing.filter(t=>t.journey_date.startsWith(String(year))).reduce((n,t)=>n+Number(t.miles||0),0);
  $('#towingStats').innerHTML=`<div class="stat"><span>Total logged towing</span><strong>${total.toLocaleString('en-GB',{maximumFractionDigits:1})} miles</strong></div><div class="stat"><span>${year} towing</span><strong>${yearMiles.toLocaleString('en-GB',{maximumFractionDigits:1})} miles</strong></div><div class="stat"><span>Journey legs logged</span><strong>${towing.length}</strong></div>`;
+ $('#towingItems').classList.add('tow-list-view');
  $('#towingItems').innerHTML=towing.map(t=>`<article class="list-card"><div class="top"><div><h3>${safe(t.origin)} → ${safe(t.destination)}</h3><p class="meta">${date(t.journey_date)}${t.trip_id&&trips.find(x=>x.id===t.trip_id)?' · '+safe(trips.find(x=>x.id===t.trip_id).title):''}</p></div><strong class="tow-miles">${Number(t.miles).toLocaleString('en-GB')} mi</strong></div>${t.notes?`<p class="meta">${safe(t.notes)}</p>`:''}<div class="actions"><button class="secondary" data-tow-edit="${safe(t.id)}">Edit</button><button class="secondary" data-tow-delete="${safe(t.id)}">Delete</button></div></article>`).join('')||'<p>No towing journeys logged yet. Add each journey leg to build your lifetime towing total.</p>';
 }
 function towingEditor(t={}){
