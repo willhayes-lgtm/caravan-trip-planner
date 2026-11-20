@@ -1,1 +1,4 @@
+name: Apply Caravan Planner UX release
 
+on:
+  workflow_dispatch:
