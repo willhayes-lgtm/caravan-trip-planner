@@ -1,9 +1,9 @@
-const fields=['name', 'location', 'url', 'notes', 'status'];
+const fields=['name', 'location', 'url', 'notes', 'status','address','distance_miles','drive_minutes'];
 const table='wishlist';
 function normalize(t){
  if(!t||typeof t!=='object')throw Error('Invalid item');
- const v={name:String(t.name||'').trim().slice(0,160),location:String(t.location||'').slice(0,200),url:String(t.url||'').slice(0,2000),notes:String(t.notes||'').slice(0,2000),status:String(t.status||'Interested')};
- if(!v.name)throw Error('Name required');
+ const v={name:String(t.name||'').trim().slice(0,160),location:String(t.location||'').slice(0,200),url:String(t.url||'').slice(0,2000),notes:String(t.notes||'').slice(0,2000),status:String(t.status||'Interested'),address:String(t.address||'').slice(0,400),distance_miles:t.distance_miles===''||t.distance_miles==null?null:Number(t.distance_miles),drive_minutes:t.drive_minutes===''||t.drive_minutes==null?null:Number(t.drive_minutes)};
+ if(!v.name)throw Error('Name required');for(const k of ['distance_miles','drive_minutes'])if(v[k]!==null&&(!Number.isFinite(v[k])||v[k]<0||v[k]>100000))throw Error('Invalid '+k);
  if(v.url){let u;try{u=new URL(v.url)}catch{throw Error('Invalid URL')}if(!['https:','http:'].includes(u.protocol))throw Error('Invalid URL')}
  if(!['Interested','Shortlisted','Ready to book'].includes(v.status))throw Error('Invalid status');
  return v;

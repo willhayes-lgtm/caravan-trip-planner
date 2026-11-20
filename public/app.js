@@ -36,7 +36,7 @@ function daysToGo(t){
 function stopsFor(t){try{const v=typeof t.stops==='string'?JSON.parse(t.stops||'[]'):t.stops;return Array.isArray(v)?v:[]}catch{return []}}
 function stopTimeline(t){
  const stops=stopsFor(t);if(!stops.length)return '';
- return `<details class="stop-timeline"><summary>🗺️ View itinerary <span>${stops.length} stops</span></summary><ol>${stops.map((s,i)=>`<li><strong>${safe(s.name)}</strong><div class="meta">${s.arrival?date(s.arrival):'Date TBC'}${s.departure?' – '+date(s.departure):''}${s.arrival&&s.departure?' · '+days(s.arrival,s.departure)+' nights':''}</div>${s.reference?`<div class="meta">Booking ref: ${safe(s.reference)}</div>`:''}${s.notes?`<div class="meta">${safe(s.notes)}</div>`:''}</li>`).join('')}</ol></details>`;
+ return `<details class="stop-timeline"><summary>🗺️ View itinerary <span>${stops.length} stops</span></summary><ol>${stops.map((s,i)=>`<li><strong>${safe(s.name)}</strong><div class="meta">${s.arrival?date(s.arrival):'Date TBC'}${s.departure?' – '+date(s.departure):''}${s.arrival&&s.departure?' · '+days(s.arrival,s.departure)+' nights':''}</div>${s.checkin_time||s.checkout_time?`<div class="meta">Check-in ${safe(s.checkin_time||'—')} · Check-out ${safe(s.checkout_time||'—')}</div>`:''}${s.reference?`<div class="meta">Booking ref: ${safe(s.reference)}</div>`:''}${s.notes?`<div class="meta">${safe(s.notes)}</div>`:''}</li>`).join('')}</ol></details>`;
 }
 const placeholder=`<div class="trip-placeholder" aria-label="No photo added">🚐<span>Photo coming soon</span></div>`;
 function photo(t){
@@ -69,7 +69,7 @@ function render(){
   const stops=stopsFor(t),hasCosts=Number(t.cost)>0||Number(t.paid)>0;
   const refs=stops.filter(s=>s.reference).length||(t.booking_ref?String(t.booking_ref).split(/\r?\n/).filter(Boolean).length:0);
   const paymentHighlight=!past&&balance>0&&t.due_date?`<div class="compact-due">💳 Next payment: <strong>${date(t.due_date)}</strong></div>`:'';
-  const summaryBits=[`${date(t.start_date)} – ${date(t.end_date)}`,`${days(t.start_date,t.end_date)} nights`,stops.length?`${stops.length} stops`:null].filter(Boolean).join(' · ');
+  const summaryBits=[`${date(t.start_date)}${t.checkin_time?' '+safe(t.checkin_time):''} – ${date(t.end_date)}${t.checkout_time?' '+safe(t.checkout_time):''}`,`${days(t.start_date,t.end_date)} nights`,stops.length?`${stops.length} stops`:null].filter(Boolean).join(' · ');
   return `<article class="trip compact-trip">${photo(t)}<div class="trip-body">
     <div class="top"><div><h3>${safe(t.title)}</h3><div class="meta">${summaryBits}</div></div><span class="pill ${safe(t.status)}">${safe(t.status)}</span></div>
     ${past?(Number(t.rating)>0?`<div class="compact-highlight">⭐ Your rating: <strong>${Number(t.rating)}/10</strong></div>`:''):`<div class="trip-countdown" data-trip-id="${safe(t.id)}">${daysToGo(t)}</div>`}
@@ -127,13 +127,13 @@ setInterval(()=>{countdown();document.querySelectorAll('.trip-countdown').forEac
 // Itinerary editor: each stop is persisted as JSON in the trips.stops column.
 function stopRow(t={}){
  const d=document.createElement('div');d.className='stop-row';
- d.innerHTML=`<label>Site / stop<input class="stop-name" maxlength="160" placeholder="Campsite or overnight stop" value="${safe(t.name||'')}"></label><label>Arrival<input class="stop-arrival" type="date" value="${safe(t.arrival||'')}"></label><label>Departure<input class="stop-departure" type="date" value="${safe(t.departure||'')}"></label><label>Booking reference<input class="stop-reference" maxlength="1000" value="${safe(t.reference||'')}"></label><label class="wide">Notes<input class="stop-notes" maxlength="1000" value="${safe(t.notes||'')}"></label><button type="button" class="secondary stop-remove">Remove stop</button>`;
+ d.innerHTML=`<label>Site / stop<input class="stop-name" maxlength="160" placeholder="Campsite or overnight stop" value="${safe(t.name||'')}"></label><label>Arrival<input class="stop-arrival" type="date" value="${safe(t.arrival||'')}"></label><label>Departure<input class="stop-departure" type="date" value="${safe(t.departure||'')}"></label><label>Check-in<input class="stop-checkin" type="time" value="${safe(t.checkin_time||'')}"></label><label>Check-out<input class="stop-checkout" type="time" value="${safe(t.checkout_time||'')}"></label><label>Booking reference<input class="stop-reference" maxlength="1000" value="${safe(t.reference||'')}"></label><label class="wide">Notes<input class="stop-notes" maxlength="1000" value="${safe(t.notes||'')}"></label><button type="button" class="secondary stop-remove">Remove stop</button>`;
  d.querySelector('.stop-remove').onclick=()=>d.remove();$('#stopRows').append(d);
 }
 function renderStops(stops){$('#stopRows').innerHTML='';stops.forEach(stopRow)}
 function readStops(){return [...document.querySelectorAll('.stop-row')].map(r=>({
  name:r.querySelector('.stop-name').value.trim(),arrival:r.querySelector('.stop-arrival').value,
- departure:r.querySelector('.stop-departure').value,reference:r.querySelector('.stop-reference').value.trim(),
+ departure:r.querySelector('.stop-departure').value,checkin_time:r.querySelector('.stop-checkin').value,checkout_time:r.querySelector('.stop-checkout').value,reference:r.querySelector('.stop-reference').value.trim(),
  notes:r.querySelector('.stop-notes').value.trim()
 })).filter(s=>s.name)}
 $('#addStop').onclick=()=>stopRow();
@@ -148,7 +148,8 @@ async function loadLists(){
  catch(e){$('#notice').textContent=e.message}
 }
 function renderLists(){
- $('#wishlistItems').innerHTML=wishlist.map(w=>`<article class="list-card"><h3>${safe(w.name)}</h3><p class="meta">${safe(w.location)}</p><span class="pill">${safe(w.status)}</span>${w.url?`<p><a href="${safe(w.url)}" target="_blank" rel="noopener noreferrer">Campsite website</a></p>`:''}${w.notes?`<p>${safe(w.notes)}</p>`:''}<div class="actions"><button class="secondary" data-list-edit="wishlist" data-id="${safe(w.id)}">Edit</button><button class="secondary" data-list-delete="wishlist" data-id="${safe(w.id)}">Delete</button><button data-list-convert="${safe(w.id)}">Plan trip</button></div></article>`).join('')||'<p>No campsites on your wish list yet.</p>';
+ const order=$('#wishSort').value;const sorted=[...wishlist].sort((a,b)=>{if(order==='name')return a.name.localeCompare(b.name);const k=order.startsWith('distance')?'distance_miles':'drive_minutes';if(a[k]==null)return 1;if(b[k]==null)return -1;return order.endsWith('Desc')?Number(b[k])-Number(a[k]):Number(a[k])-Number(b[k])});
+ $('#wishlistItems').innerHTML=sorted.map(w=>`<article class="list-card"><h3>${safe(w.name)}</h3><p class="meta">${safe(w.location)}</p>${w.address?`<p class="meta">${safe(w.address)}</p>`:''}<p class="meta">From Lymm Marina: ${w.distance_miles!=null?safe(w.distance_miles)+' miles':'Distance not entered'} · ${w.drive_minutes!=null?safe(w.drive_minutes)+' minutes':'Drive time not entered'}</p><span class="pill">${safe(w.status)}</span>${w.url?`<p><a href="${safe(w.url)}" target="_blank" rel="noopener noreferrer">Campsite website</a></p>`:''}${w.notes?`<p>${safe(w.notes)}</p>`:''}<div class="actions"><button class="secondary" data-list-edit="wishlist" data-id="${safe(w.id)}">Edit</button><button class="secondary" data-list-delete="wishlist" data-id="${safe(w.id)}">Delete</button><button data-list-convert="${safe(w.id)}">Plan trip</button></div></article>`).join('')||'<p>No campsites on your wish list yet.</p>';
  const remaining=shopping.filter(x=>!Number(x.purchased)).reduce((n,x)=>n+Number(x.estimated_cost||0),0);
  $('#shoppingSummary').innerHTML=`<p><strong>${shopping.filter(x=>!Number(x.purchased)).length} items to buy</strong> · Estimated remaining cost: ${money(remaining)}</p>`;
  $('#shoppingItems').innerHTML=shopping.map(x=>`<article class="list-card"><h3>${safe(x.name)}</h3><p>${money(x.estimated_cost)} · ${safe(x.priority)} priority</p><p class="meta">${Number(x.purchased)?'✓ Purchased':'Not purchased'}</p>${x.url?`<p><a href="${safe(x.url)}" target="_blank" rel="noopener noreferrer">Product link</a></p>`:''}${x.notes?`<p>${safe(x.notes)}</p>`:''}<div class="actions"><button class="secondary" data-list-edit="shopping" data-id="${safe(x.id)}">Edit</button><button class="secondary" data-list-delete="shopping" data-id="${safe(x.id)}">Delete</button><button data-list-toggle="${safe(x.id)}">${Number(x.purchased)?'Mark unpurchased':'Mark purchased'}</button></div></article>`).join('')||'<p>Your shopping list is empty.</p>';
@@ -159,11 +160,11 @@ function listEditor(kind,item={}){
  const input=(name,label,value='',type='text')=>`<label>${label}<input name="${name}" type="${type}" value="${safe(value)}"></label>`;
  const select=(name,label,opts,value)=>`<label>${label}<select name="${name}">${opts.map(o=>`<option value="${safe(o)}" ${o===value?'selected':''}>${safe(o)}</option>`).join('')}</select></label>`;
  $('#listFields').innerHTML=kind==='wishlist'
- ?input('name','Campsite name',item.name)+input('location','Location',item.location)+input('url','Website URL',item.url,'url')+select('status','Status',['Interested','Shortlisted','Ready to book'],item.status||'Interested')+input('notes','Notes',item.notes)
+ ?input('name','Campsite name',item.name)+input('location','Location',item.location)+input('address','Full address / postcode',item.address)+input('distance_miles','Miles from Lymm Marina',item.distance_miles??'','number')+input('drive_minutes','Estimated towing minutes',item.drive_minutes??'','number')+input('url','Website URL',item.url,'url')+select('status','Status',['Interested','Shortlisted','Ready to book'],item.status||'Interested')+input('notes','Notes',item.notes)
  :input('name','Item name',item.name)+input('estimated_cost','Estimated price (£)',item.estimated_cost||0,'number')+input('url','Product URL',item.url,'url')+select('priority','Priority',['Low','Medium','High'],item.priority||'Medium')+select('purchased','Purchased?',['0','1'],String(Number(item.purchased||0)))+input('notes','Notes',item.notes);
  $('#listEditor').showModal();
 }
-$('#addWish').onclick=()=>listEditor('wishlist');
+$('#addWish').onclick=()=>listEditor('wishlist');$('#wishSort').onchange=renderLists;
 $('#addShop').onclick=()=>listEditor('shopping');
 $('#listCancel').onclick=()=>$('#listEditor').close();
 $('#listForm').onsubmit=async e=>{
