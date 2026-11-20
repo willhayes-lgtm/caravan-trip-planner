@@ -68,10 +68,27 @@ async function notificationCentre(){
  }
  // Critical first, then earliest deadline. One entry per underlying source record.
  const unique=[...new Map(notices.map(n=>[n.key,n])).values()].sort((a,b)=>(a.severity==='critical'?0:1)-(b.severity==='critical'?0:1)||a.days-b.days||a.title.localeCompare(b.title));
+ // Preserve a user's open/closed choice during background refreshes.
+ // A fresh page load always starts collapsed.
+ const wasOpen=root.querySelector('#uxNotificationDetails')?.open===true;
  root.replaceChildren();
- const header=el('div','ux-notification-head');header.append(el('h3','','Notifications & actions'));
- const count=el('span','ux-notification-count',`${unique.length} ${unique.length===1?'action':'actions'}`);header.append(count);root.append(header);
- if(!unique.length){root.append(el('div','ux-notification-empty','✓ You’re all caught up — no upcoming actions.'))}
+ const details=el('details','ux-notification-details');
+ details.id='uxNotificationDetails';
+ details.open=wasOpen;
+ const summary=el('summary','ux-notification-summary');
+ const heading=el('span','ux-notification-summary-title','Notifications & actions');
+ const badges=el('span','ux-notification-summary-badges');
+ const overdue=unique.filter(n=>n.severity==='critical').length;
+ const soon=unique.length-overdue;
+ if(overdue)badges.append(el('span','ux-notification-summary-badge ux-notification-summary-critical',`${overdue} overdue / expired`));
+ if(soon)badges.append(el('span','ux-notification-summary-badge ux-notification-summary-warning',`${soon} due soon`));
+ if(!unique.length)badges.append(el('span','ux-notification-summary-badge ux-notification-summary-clear','All caught up'));
+ const chevron=el('span','ux-notification-chevron','⌄');
+ chevron.setAttribute('aria-hidden','true');
+ summary.append(heading,badges,chevron);
+ details.append(summary);
+ const content=el('div','ux-notification-content');
+ if(!unique.length){content.append(el('div','ux-notification-empty','✓ You’re all caught up — no upcoming actions.'))}
  else{
   const list=el('div','ux-notification-list');
   for(const n of unique){
@@ -83,10 +100,15 @@ async function notificationCentre(){
    const link=el('a','ux-notification-link',n.action+' →');link.href=n.href;right.append(link);
    row.append(main,right);list.append(row);
   }
-  root.append(list);
+  content.append(list);
  }
  const failed=['maintenance','caravan profile','trips'].filter((_,i)=>sources[i].status==='rejected');
- if(failed.length)root.append(el('p','ux-notification-partial','Some notifications could not be checked ('+failed.join(', ')+'). Refresh to try again.'));
+ if(failed.length){
+  // Show incomplete-data warnings even when the details are collapsed.
+  const warning=el('p','ux-notification-partial','Some notifications could not be checked ('+failed.join(', ')+'). Refresh to try again.');
+  root.append(details,warning);
+ }else root.append(details);
+ details.append(content);
 }
 function dashboard(){
  if(phase)return;
