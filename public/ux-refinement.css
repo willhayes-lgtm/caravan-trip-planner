@@ -1,0 +1,46 @@
+/* UX refinement: maintenance alert, towing actions, checklist spacing, profile groups */
+#uxMaintenanceCard.ux-maint-status{display:flex;align-items:center;gap:13px;padding:12px 16px;margin:0 0 18px;border:1px solid #c8dedb;border-left:5px solid #258c81;border-radius:12px;background:#eef8f5;color:#145a52;min-height:54px;box-sizing:border-box}
+#uxMaintenanceCard.ux-maint-overdue{background:#fff0ef;border-color:#f0c5c2;border-left-color:#c33b35;color:#8e2724}
+#uxMaintenanceCard.ux-maint-today,#uxMaintenanceCard.ux-maint-soon{background:#fff7e7;border-color:#efd9a7;border-left-color:#bd7a18;color:#80500d}
+#uxMaintenanceCard.ux-maint-clear{background:#eef8f5;border-color:#c8e2d7;border-left-color:#2b8b69;color:#1d6950}
+#uxMaintenanceCard .ux-maint-symbol{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:currentColor;font-weight:900;font-size:0}
+#uxMaintenanceCard .ux-maint-symbol::after{content:'!';font-size:17px;color:white}
+#uxMaintenanceCard.ux-maint-clear .ux-maint-symbol::after{content:'✓'}
+#uxMaintenanceCard .ux-maint-status-copy{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+#uxMaintenanceCard .ux-maint-status-copy strong{font-size:14px;line-height:1.3}
+#uxMaintenanceCard .ux-maint-status-copy>span{font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+#uxMaintenanceCard .ux-maint-status-link{font-size:12px;font-weight:750;white-space:nowrap;color:inherit;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:650px){#uxMaintenanceCard.ux-maint-status{align-items:flex-start;flex-wrap:wrap;padding:12px}#uxMaintenanceCard .ux-maint-status-link{margin-left:41px}}
+/* Towing: predictable columns and fixed icon actions. */
+#towingPage #towingItems.tow-list-view .list-card{grid-template-columns:minmax(0,1fr) 88px!important;gap:14px!important}
+#towingPage #towingItems.tow-list-view .list-card .top{width:100%;display:grid!important;grid-template-columns:minmax(0,1fr) 90px;align-items:center;gap:14px}
+#towingPage #towingItems.tow-list-view .list-card .tow-miles{text-align:right}
+#towingPage #towingItems.tow-list-view .list-card>.meta{grid-column:1/-1;grid-row:2;margin:0}
+#towingPage #towingItems.tow-list-view .list-card .actions{display:flex!important;justify-content:flex-end!important;align-items:center;gap:7px;margin:0!important}
+#towingPage #towingItems.tow-list-view .tow-icon-btn{display:inline-grid;place-items:center;width:36px;height:36px;min-width:36px;min-height:36px;padding:0!important;border:1px solid #d7e5e6;border-radius:9px;color:#285c66;background:#fff!important}
+#towingPage #towingItems.tow-list-view .tow-icon-btn:hover{background:#eaf6f5!important;border-color:#89bdbf}
+#towingPage #towingItems.tow-list-view .tow-delete-btn{color:#a74742}
+#towingPage #towingItems.tow-list-view .tow-delete-btn:hover{background:#fff0ef!important;border-color:#e5a7a2}
+@media(max-width:650px){#towingPage #towingItems.tow-list-view .list-card{grid-template-columns:minmax(0,1fr) 82px!important;gap:10px!important}#towingPage #towingItems.tow-list-view .list-card .top{grid-template-columns:minmax(0,1fr);gap:5px}#towingPage #towingItems.tow-list-view .list-card .tow-miles{text-align:left}#towingPage #towingItems.tow-list-view .list-card>.meta{grid-column:1/-1}}
+/* Profile: strong visual category boundaries, responsive two-column inputs. */
+#phaseProfile>.phase-card{background:transparent;border:0;box-shadow:none;padding:0}
+#phaseProfile .ux-profile-intro{padding:12px 4px 22px}
+#phaseProfile .ux-profile-eyebrow{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#25818a}
+#phaseProfile .ux-profile-intro h3{font-size:26px;margin:7px 0 6px;color:#123f52}
+#phaseProfile .ux-profile-intro p{margin:0;color:#607980;line-height:1.5}
+#phaseProfile .phase-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+#phaseProfile .ux-profile-group{grid-column:1/-1;min-width:0;background:#fff;border:1px solid #d9e8e8;border-radius:16px;overflow:hidden;box-shadow:0 3px 13px #123f5208}
+#phaseProfile .ux-profile-group-head{display:flex;align-items:center;gap:14px;padding:19px 22px;background:#f3f8f8;border-bottom:1px solid #e1ecec}
+#phaseProfile .ux-profile-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;background:#e3f1ef;border-radius:12px;font-size:21px}
+#phaseProfile .ux-profile-group-head h3{margin:0 0 4px;font-size:18px;color:#123f52}
+#phaseProfile .ux-profile-group-head p{margin:0;font-size:12px;line-height:1.5;color:#617b82}
+#phaseProfile .ux-profile-fields{padding:22px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 22px}
+#phaseProfile .ux-profile-fields label{display:flex;flex-direction:column;gap:7px;min-width:0;font-size:13px;font-weight:700;color:#345b62}
+#phaseProfile .ux-profile-fields label.wide{grid-column:1/-1}
+#phaseProfile .ux-profile-fields input,#phaseProfile .ux-profile-fields textarea{width:100%;box-sizing:border-box;min-height:43px;padding:10px 12px;border:1px solid #cbdfe0;border-radius:9px;background:white;font-size:14px;color:#173e49}
+#phaseProfile .ux-profile-fields input:focus,#phaseProfile .ux-profile-fields textarea:focus{outline:2px solid #238c9a;outline-offset:1px}
+#phaseProfileSave>.phase-actions{display:flex;justify-content:flex-end;margin:22px 0 30px}
+#phaseProfileSave>.phase-actions button{padding:12px 22px}
+@media(max-width:650px){#phaseProfile .ux-profile-fields{grid-template-columns:1fr;padding:16px;gap:15px}#phaseProfile .ux-profile-group-head{padding:16px}#phaseProfile .ux-profile-intro h3{font-size:22px}}
+/* Checklist controls: distinct action group, adequate gaps on desktop. */
+@media(min-width:701px){#phaseLists .phase-card{padding:28px 30px}#phaseLists .phase-tabs{gap:12px;margin:22px 0 26px}#phaseLists .phase-toolbar{margin:22px 0 26px;padding:18px 20px;border:1px solid #dbe9e9;background:#f7faf9;border-radius:14px}#phaseLists .phase-toolbar .phase-actions{display:flex!important;align-items:center;gap:16px!important;margin:0;flex-wrap:wrap}#phaseLists .phase-toolbar .phase-actions button{margin:0!important;padding:11px 18px!important}#phaseLists .phase-add{margin:0 0 18px;gap:16px}#phaseLists .phase-task{padding:16px 18px}#phaseLists .phase-list{gap:12px}}

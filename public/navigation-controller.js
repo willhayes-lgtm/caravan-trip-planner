@@ -10,6 +10,8 @@ function show(key,changeUrl=true){
  current=key;document.body.dataset.currentPage=key;
  const target=pages[key];
  for(const id of new Set(Object.values(pages))){const section=document.getElementById(id);if(section)section.hidden=id!==target;}
+ const payloadInner=document.getElementById('payloadTab');if(payloadInner)payloadInner.hidden=key!=='payload';
+ const serviceInner=document.getElementById('serviceTab');if(serviceInner)serviceInner.hidden=key!=='service';
  const cp=document.getElementById('checklistsPage');if(cp){
   const profile=key==='profile';cp.classList.toggle('ux-profile-view',profile);cp.classList.toggle('ux-checklists-view',key==='checklists');
   const lists=cp.querySelector('#phaseLists'),details=cp.querySelector('#phaseProfile');
