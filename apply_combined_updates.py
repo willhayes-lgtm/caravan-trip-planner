@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 
 """Caravan Planner UX refinement. Safe to run from repository root on current main."""
 from pathlib import Path
 import re
