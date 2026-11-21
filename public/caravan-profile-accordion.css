@@ -1,0 +1,36 @@
+/* Profile accordion — mobile and desktop */
+#phaseProfileForm .ux-profile-group-head{padding:0!important}
+#phaseProfileForm .cpa-toggle{
+ width:100%;min-width:0;display:flex;align-items:center;
+ gap:14px;text-align:left;cursor:pointer;
+ border:0;background:transparent;color:inherit;
+ padding:18px 20px;border-radius:0;font:inherit;
+}
+#phaseProfileForm .cpa-toggle:hover{background:#eaf4f3}
+#phaseProfileForm .cpa-toggle:focus-visible{outline:3px solid #168f99;outline-offset:-3px}
+#phaseProfileForm .cpa-toggle>div{min-width:0;flex:1}
+#phaseProfileForm .cpa-toggle h3,#phaseProfileForm .cpa-toggle p{text-align:left}
+#phaseProfileForm .cpa-chevron{margin-left:auto;flex:0 0 auto;font-size:25px;line-height:1;color:#315f68;transition:transform .18s ease}
+#phaseProfileForm .ux-profile-group[data-open="true"] .cpa-chevron{transform:rotate(180deg)}
+#phaseProfileForm .ux-profile-group[data-open="true"] .ux-profile-group-head{border-bottom:1px solid #e1ecec}
+#phaseProfileForm .ux-profile-group[data-open="false"] .ux-profile-group-head{border-bottom:0}
+#phaseProfileForm .ux-profile-fields[hidden],
+#phaseProfileForm .cpa-section-actions[hidden]{display:none!important}
+#phaseProfileSave>.phase-actions[hidden]{display:none!important}
+#phaseProfileForm .cpa-section-actions{
+ display:flex;justify-content:flex-end;padding:0 20px 20px;
+}
+#phaseProfileForm .cpa-save{
+ width:auto;max-width:100%;min-height:44px;padding:10px 18px;
+ border:0;border-radius:10px;background:#168f99;color:#fff;
+ font-size:14px;font-weight:700;cursor:pointer;
+}
+#phaseProfileForm .cpa-save:hover{background:#126f78}
+@media(max-width:650px){
+ #phaseProfileForm .cpa-toggle{padding:15px 16px;gap:12px}
+ #phaseProfileForm .cpa-section-actions{padding:0 16px 16px}
+ #phaseProfileForm .cpa-save{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ #phaseProfileForm .cpa-chevron{transition:none}
+}
