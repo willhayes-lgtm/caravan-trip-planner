@@ -1,0 +1,7 @@
+(()=>{'use strict';
+let toastNode,timer;
+window.caravanUXToast=(message)=>{if(!toastNode){toastNode=document.createElement('div');toastNode.className='premium-toast';toastNode.setAttribute('role','status');toastNode.setAttribute('aria-live','polite');document.body.append(toastNode)}toastNode.textContent=message;clearTimeout(timer);requestAnimationFrame(()=>toastNode.classList.add('visible'));timer=setTimeout(()=>toastNode.classList.remove('visible'),2200)};
+function init(){const list=document.getElementById('phaseItems');if(!list)return;let pending=null;
+list.addEventListener('change',e=>{const input=e.target.closest('input[data-check]');if(input?.checked)pending={id:input.dataset.check,at:Date.now()}},true);
+new MutationObserver(()=>{if(!pending)return;if(Date.now()-pending.at>5000){pending=null;return}const row=[...list.querySelectorAll('.phase-task[data-id]')].find(x=>x.dataset.id===pending.id);if(!row?.classList.contains('checked'))return;pending=null;if(!matchMedia('(prefers-reduced-motion: reduce)').matches){row.classList.add('premium-completed');row.addEventListener('animationend',()=>row.classList.remove('premium-completed'),{once:true})}window.caravanUXToast('Task completed')}).observe(list,{childList:true});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();})();

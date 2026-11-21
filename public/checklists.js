@@ -82,7 +82,7 @@ function setup(){const nav=$('.main-nav'),main=$('main');if(!nav||!main)return;
   const [moved]=ids.splice(from,1);ids.splice(to,0,moved);
   try{await updateOrder(ids)}catch(err){alertError(err)}
  });
- $('#phaseProfileSave').onsubmit=async e=>{e.preventDefault();try{profile=await req('caravan-profile','PUT',Object.fromEntries(new FormData(e.target)));renderProfile();$('#phaseError').textContent='';alert('Caravan profile saved.')}catch(err){alertError(err)}};
+ $('#phaseProfileSave').onsubmit=async e=>{e.preventDefault();try{profile=await req('caravan-profile','PUT',Object.fromEntries(new FormData(e.target)));renderProfile();$('#phaseError').textContent='';window.caravanUXToast?.('Caravan profile saved')}catch(err){alertError(err)}};
  async function load(){try{if(!loaded){[trips,profile]=await Promise.all([req('trips'),req('caravan-profile')]);renderProfile();loaded=true;}await refresh();$('#phaseError').textContent='';}catch(err){alertError(err)}}
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();

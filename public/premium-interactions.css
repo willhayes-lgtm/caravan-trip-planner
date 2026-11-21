@@ -1,0 +1,12 @@
+/* Premium interaction polish */
+button:not(:disabled){transition:background-color .18s ease,border-color .18s ease,transform .18s cubic-bezier(.22,1,.36,1)}
+button:not(:disabled):active{transform:scale(.985)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #168f99;outline-offset:2px}
+#phaseItems .phase-task{transition:background-color .2s ease}
+#phaseItems .phase-task input[type=checkbox]{accent-color:#168a74}
+#phaseItems .phase-task.premium-completed{animation:premium-complete .38s cubic-bezier(.22,1,.36,1)}
+@keyframes premium-complete{0%{transform:scale(.987);background:#d5f2e8}55%{transform:scale(1.008);background:#e2f6ee}100%{transform:scale(1);background:transparent}}
+.premium-toast{position:fixed;bottom:max(24px,env(safe-area-inset-bottom) + 18px);left:50%;transform:translate(-50%,12px);opacity:0;pointer-events:none;z-index:99999;max-width:90vw;padding:12px 18px;border-radius:12px;background:#176f65;color:white;font-weight:650;box-shadow:0 10px 30px #062f3c33;transition:opacity .2s,transform .2s}
+.premium-toast.visible{opacity:1;transform:translate(-50%,0)}
+@media(max-width:900px){.premium-toast{bottom:max(100px,env(safe-area-inset-bottom) + 85px)}}
+@media(prefers-reduced-motion:reduce){button,.premium-toast,#phaseItems .phase-task{transition:none!important}#phaseItems .phase-task.premium-completed{animation:none!important}}
