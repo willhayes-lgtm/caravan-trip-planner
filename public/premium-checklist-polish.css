@@ -1,0 +1,53 @@
+/* Trip editor: one selected state, without stacked focus rings. */
+#editor .p2-tabs .p2-tab.active,
+#editor .p2-tabs .p2-tab.active:focus,
+#editor .p2-tabs .p2-tab.active:focus-visible {
+  background:#e3f3f1!important;
+  color:#13545a!important;
+  border:1px solid #b9d9d7!important;
+  box-shadow:none!important;
+  outline:none!important;
+  outline-offset:0!important;
+  transform:none!important;
+  -webkit-tap-highlight-color:transparent;
+}
+#editor .p2-tabs .p2-tab.active::before,
+#editor .p2-tabs .p2-tab.active::after {box-shadow:none!important;outline:none!important;}
+#editor .p2-tabs .p2-tab:focus-visible:not(.active) {outline:2px solid #147d83!important;outline-offset:2px!important;}
+/* The selected tab still needs a visible keyboard focus state, but not a double border. */
+#editor .p2-tabs .p2-tab.active:focus-visible {box-shadow:inset 0 0 0 2px #147d83!important;}
+
+/* Move safety information into the heading/progress area. */
+#phaseLists .phase-checklist-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;margin:6px 0 4px;}
+#phaseLists .phase-checklist-topline #phaseTitle{margin:0;min-width:0;}
+#phaseLists #phaseSafetyInfo{position:static!important;display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:0!important;border:1px solid #c4dddf;border-radius:12px;background:#eff7f7;color:#155a68;font-size:24px!important;font-weight:600;line-height:1;box-shadow:none!important;cursor:pointer;}
+#phaseLists #phaseSafetyInfo:hover{background:#e0f0f0;}
+#phaseLists #phaseSafetyInfo:focus-visible{outline:3px solid #168f99;outline-offset:2px;}
+/* Balanced toolbar across phone and desktop. */
+#phaseLists .phase-toolbar{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;min-width:0;}
+#phaseLists .phase-toolbar .phase-actions{display:flex!important;align-items:center!important;gap:10px!important;margin:0!important;}
+#phaseLists .phase-toolbar #phaseAddToggle,
+#phaseLists .phase-toolbar #phaseEdit,
+#phaseLists .phase-toolbar #phaseReset{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-height:46px!important;padding:10px 15px!important;font-size:14px!important;font-weight:700!important;line-height:1.2!important;letter-spacing:0!important;width:auto!important;min-width:0!important;max-width:100%!important;border-radius:12px!important;white-space:nowrap!important;}
+#phaseLists .phase-toolbar #phaseAddToggle[hidden]{display:none!important;}
+#phaseLists .phase-toolbar #phaseAddToggle{background:#178f99!important;color:#fff!important;}
+#phaseLists .phase-toolbar #phaseEdit::before{content:"✎";font-size:21px;line-height:1;}
+#phaseLists .phase-toolbar #phaseReset::before{content:"↻";font-size:23px;line-height:1;}
+#phaseLists .phase-toolbar #phaseReset:disabled{opacity:.5;}
+#phaseLists .phase-toolbar #phaseAdd{flex:1 0 100%;order:3;margin:0;}
+#phaseLists .phase-toolbar #phaseAdd[hidden]{display:none!important;}
+@media(max-width:600px){
+ #phaseLists .phase-toolbar{gap:8px!important;}
+ #phaseLists .phase-toolbar .phase-actions{gap:8px!important;}
+ #phaseLists .phase-toolbar #phaseAddToggle,
+ #phaseLists .phase-toolbar #phaseEdit,
+ #phaseLists .phase-toolbar #phaseReset{min-height:44px!important;padding:10px 11px!important;font-size:13px!important;}
+ #phaseLists .phase-toolbar #phaseEdit::before{font-size:20px;}
+ #phaseLists .phase-toolbar #phaseReset::before{font-size:22px;}
+}
+@media(max-width:360px){
+ #phaseLists .phase-toolbar #phaseAddToggle{flex:1 1 100%;}
+ #phaseLists .phase-toolbar .phase-actions{flex:1;justify-content:flex-end;}
+}
+
+#phaseLists .ct-defaults-panel[hidden]{display:none!important;}

@@ -23,6 +23,51 @@ async function run(){const btn=document.getElementById('ct-defaults-import');btn
  let count=0;for(const task of additions){const r=await fetch('/api/checklists',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'item',...task})});if(!r.ok){const j=await r.json().catch(()=>({}));throw Error(j.error||'Could not add '+task.title)}count++;status.textContent=`Added ${count} of ${additions.length} tasks…`;}
  status.textContent=`Added ${count} tasks. Refresh this page to see them in your checklists.`;
  }catch(e){status.textContent='Import stopped: '+e.message+' (already added tasks will not be duplicated on retry).'}finally{btn.disabled=false;}}
-function mount(){const root=document.getElementById('phaseLists');if(!root||document.getElementById('ct-defaults-import'))return;const panel=document.createElement('div');panel.className='ct-defaults-panel';panel.innerHTML='<div><strong>Recommended setup & departure tasks</strong><p>Add motor mover, Aquaroll, toilet and departure checks without replacing your personalised lists.</p><small id="ct-defaults-status" role="status" aria-live="polite"></small></div><button type="button" id="ct-defaults-import" class="secondary">Add missing defaults</button>';root.querySelector('.phase-card')?.append(panel);panel.querySelector('button').addEventListener('click',run);}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{mount();new MutationObserver(mount).observe(document.body,{childList:true,subtree:true})});else{mount();new MutationObserver(mount).observe(document.body,{childList:true,subtree:true})}
+
+async function pending(){
+ const response=await fetch('/api/checklists',{credentials:'same-origin'});
+ if(!response.ok)throw Error('Unable to check recommended tasks');
+ const data=await response.json();
+ const targets=Object.entries(sets).map(([kind,entries])=>({entries,template:choose(data.templates||[],kind)}));
+ if(targets.some(x=>!x.template))return null;
+ return targets.reduce((count,{entries,template})=>count+entries.filter(([,title])=>!(data.items||[]).some(x=>x.template_id===template.id&&norm(x.title)===norm(title))).length,0);
+}
+let checking=false, lastCheck=0;
+async function syncPanel(force=false){
+ const panel=document.querySelector('.ct-defaults-panel');
+ if(!panel||checking)return;
+ if(!force&&Date.now()-lastCheck<20000)return;
+ checking=true;lastCheck=Date.now();
+ try{
+   const count=await pending();
+   panel.hidden=count===0||count===null;
+   if(count>0){
+     const status=panel.querySelector('#ct-defaults-status');
+     if(status)status.textContent=`${count} recommended task${count===1?'':'s'} available to add.`;
+   }
+ }catch(e){
+   // Don't block checklist usage if the recommendations API is unavailable.
+   panel.hidden=true;
+ }finally{checking=false;}
+}
+function mount(){
+ const root=document.getElementById('phaseLists');
+ if(!root||document.getElementById('ct-defaults-import'))return;
+ const card=root.querySelector('.phase-card');
+ if(!card)return;
+ const panel=document.createElement('div');
+ panel.className='ct-defaults-panel';
+ panel.hidden=true;
+ panel.innerHTML='<div><strong>Recommended setup & departure tasks</strong><p>Add motor mover, Aquaroll, toilet and departure checks without replacing your personalised lists.</p><small id="ct-defaults-status" role="status" aria-live="polite"></small></div><button type="button" id="ct-defaults-import" class="secondary">Add missing defaults</button>';
+ card.append(panel);
+ panel.querySelector('button').addEventListener('click',async()=>{await run();await syncPanel(true)});
+ syncPanel(true);
+}
+function init(){
+ mount();
+ new MutationObserver(()=>mount()).observe(document.body,{childList:true,subtree:true});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncPanel(true)});
+ window.addEventListener('planner:navigate',e=>{if(e.detail?.page==='checklists')syncPanel(true)});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
