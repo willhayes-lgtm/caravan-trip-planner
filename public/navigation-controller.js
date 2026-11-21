@@ -23,6 +23,7 @@ function show(key,changeUrl=true){
  const pin=document.getElementById('uxPinCurrent');if(pin)pin.hidden=key==='dashboard';
  if(changeUrl){const next=key==='dashboard'?location.pathname:'#'+key;history.replaceState(null,'',next)}
  window.dispatchEvent(new CustomEvent('planner:navigate',{detail:{page:key}}));
+ if(window.innerWidth<=900){document.body.classList.remove('ux-menu-open');document.querySelector('.ux-menu-toggle')?.setAttribute('aria-expanded','false');document.querySelector('.ux-menu-toggle')?.setAttribute('aria-label','Open menu');window.scrollTo(0,0);}
 }
 function navigate(key,changeUrl=true){show(key,changeUrl)}
 function route(){const key=location.hash.slice(1);navigate(pages[key]?key:'dashboard',false)}

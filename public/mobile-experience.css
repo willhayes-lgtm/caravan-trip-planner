@@ -1,0 +1,59 @@
+/* Mobile-first shell improvements; desktop remains unchanged. */
+@media(max-width:900px){
+ html{scroll-padding-top:84px}
+ body>header{position:sticky!important;top:0;z-index:85;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;width:100%;min-height:76px;padding:12px 16px!important;background:#123f52!important;box-shadow:0 2px 12px #123f5220;transition:min-height .18s,padding .18s}
+ body>header>div:first-of-type{min-width:0;flex:1}
+ body>header h1{font-size:19px!important;line-height:1.2!important;margin:2px 0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body>header .eyebrow,body>header p{display:none!important}
+ body>header>.ux-menu-toggle{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 auto;position:static!important;order:2;margin:0!important;min-height:44px;padding:9px 12px!important;border-radius:10px;z-index:2}
+ body.ux-scrolled>header{min-height:54px;padding:6px 14px!important}
+ body.ux-scrolled>header h1{font-size:16px!important}
+ .ux-sidebar{position:fixed!important;inset:0 auto 0 0!important;top:0!important;bottom:0!important;height:100vh!important;height:100dvh!important;width:min(340px,88vw)!important;max-height:none!important;z-index:101!important;overflow-y:auto!important;overscroll-behavior:contain!important;transform:translateX(-105%);background:#fff!important;box-shadow:12px 0 35px #123f5240;padding-top:max(12px,env(safe-area-inset-top))!important;padding-bottom:max(16px,env(safe-area-inset-bottom))!important}
+ body.ux-menu-open .ux-sidebar{transform:translateX(0)!important}
+ body.ux-menu-open .ux-backdrop{display:block!important;position:fixed!important;inset:0!important;z-index:100!important;background:rgba(8,29,36,.52)!important;border:0!important;border-radius:0!important;backdrop-filter:none!important}
+ body.ux-menu-open{overflow:hidden}
+ .ux-content{background:#f5f9f8!important}
+ .ux-content main{padding-top:12px!important}
+ .ux-account-footer{position:relative!important;min-width:0!important}
+ .ux-account-footer .header-controls{width:100%!important;min-width:0!important;flex-wrap:wrap!important}
+ .ux-account-footer .data-menu{width:100%!important;min-width:0!important}
+ .ux-account-footer .data-menu>summary{width:100%!important;box-sizing:border-box}
+ .ux-account-footer .data-menu-panel{position:static!important;left:auto!important;right:auto!important;top:auto!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin-top:8px!important;box-shadow:none!important;overflow-wrap:anywhere!important}
+ .ux-account-footer .data-menu-panel button{white-space:normal!important}
+ #checklistsPage>.phase-head{margin-bottom:8px!important}
+ #checklistsPage .ux-page-pinbar{margin:0 0 10px!important;justify-content:flex-start!important}
+ #checklistsPage .ux-page-pinbar button{padding:7px 11px!important;font-size:12px!important}
+ .ux-page-pinbar{margin-bottom:10px!important}
+ #phaseLists>.phase-card{padding:13px!important}
+ #phaseLists .phase-head{gap:8px!important;margin-bottom:10px!important}
+ #phaseLists .phase-head h3{font-size:18px!important}
+ #phaseLists .phase-head p{margin:2px 0!important}
+ #phaseLists .phase-trip{width:100%!important;max-width:none!important}
+ #phaseLists #phaseTabs{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overscroll-behavior-x:contain;scroll-snap-type:x proximity;gap:6px!important;margin:10px 0 12px!important;padding:0 0 5px!important;scrollbar-width:thin}
+ #phaseLists #phaseTabs button{flex:0 0 auto!important;width:auto!important;min-width:0!important;white-space:nowrap!important;scroll-snap-align:start;padding:9px 12px!important;font-size:12px!important;min-height:38px!important}
+ #phaseLists #phaseTitle{font-size:18px!important;margin-bottom:4px!important}
+ #phaseLists #phaseDescription{font-size:12px!important;margin-bottom:10px!important}
+ #phaseLists #phaseProgress{position:sticky!important;top:var(--mobile-progress-top,66px)!important;z-index:30!important;background:#fff!important;border:1px solid #dce9e9!important;box-shadow:0 3px 12px #123f5214!important;padding:10px 12px 5px!important;border-radius:11px!important;margin:0 0 10px!important}
+ #phaseLists .phase-progress{height:8px!important;margin:7px 0 4px!important}
+ #phaseLists .phase-progress-label{font-size:12px!important}
+ body:not(.ux-scrolled){--mobile-progress-top:86px}
+ body.ux-scrolled{--mobile-progress-top:64px}
+ #phaseLists .phase-toolbar{display:flex!important;flex-direction:column!important;gap:9px!important;padding:0!important;margin:8px 0 12px!important;border:0!important;background:transparent!important}
+ #phaseLists .phase-toolbar .phase-actions{display:flex!important;flex-wrap:nowrap!important;gap:8px!important;margin:0!important;order:0}
+ #phaseLists .phase-toolbar .phase-actions button{flex:1 1 0!important;width:auto!important;min-width:0!important;margin:0!important;padding:9px 12px!important;font-size:13px!important}
+ #phaseLists .phase-add-toggle{order:1;align-self:flex-start;min-height:38px;padding:8px 12px!important;font-size:13px!important}
+ #phaseLists #phaseAdd{order:2;display:grid!important;grid-template-columns:1fr!important;gap:10px!important;width:100%!important;margin:0!important;padding:12px!important;background:#f3f9f8;border:1px solid #dbe9e9;border-radius:11px}
+ #phaseLists #phaseAdd[hidden],#phaseLists #phaseAddToggle[hidden]{display:none!important}
+ #phaseLists #phaseAdd label{min-width:0!important;width:100%!important}
+ #phaseLists .phase-safety-info{display:inline-flex!important;align-items:center;gap:5px;background:transparent!important;color:#226f7b!important;border:0!important;padding:6px 0!important;margin:0 0 7px!important;font-size:12px!important;text-decoration:underline}
+ #phaseLists .phase-archive{display:none!important}
+ #phaseLists .phase-task{padding:10px!important}
+ #phaseLists .phase-task-actions{flex-wrap:wrap!important}
+ .phase-safety-dialog{width:min(420px,calc(100vw - 30px))!important;max-height:80dvh!important;overflow:auto!important;padding:22px!important}
+ .phase-safety-dialog p{line-height:1.55;color:#405e65}
+}
+@media(min-width:901px){
+ .phase-safety-info{background:transparent!important;color:#226f7b!important;padding:7px 0!important;text-decoration:underline}
+ #phaseLists #phaseAdd[hidden],#phaseLists #phaseAddToggle[hidden]{display:none!important}
+ #phaseLists .phase-archive{display:none!important}
+}
