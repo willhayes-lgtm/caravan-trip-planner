@@ -1,0 +1,24 @@
+/* Mobile profile: prevent overflow and left-align every field */
+#phaseProfile .ux-profile-group,#phaseProfile .ux-profile-fields,#phaseProfile .ux-profile-fields label{min-width:0;max-width:100%;box-sizing:border-box}
+#phaseProfile .ux-profile-fields input,#phaseProfile .ux-profile-fields textarea{display:block;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;text-align:left!important;margin:0!important}
+#phaseProfile .ux-profile-fields input[type=date]{text-align:left!important;text-align-last:left!important;direction:ltr!important;min-height:44px}
+#phaseProfile .ux-profile-fields input[type=date]::-webkit-date-and-time-value{text-align:left!important;min-height:1em}
+#phaseProfile .ux-profile-fields input[type=date]::-webkit-datetime-edit{text-align:left!important;padding:0!important}
+#phaseProfile .ux-profile-fields input[type=date]::-webkit-calendar-picker-indicator{margin-left:auto}
+@media(max-width:900px){
+ #phaseProfile,#phaseProfile .phase-card,#phaseProfileSave,#phaseProfileForm,#phaseProfile .ux-profile-group{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+ #phaseProfile .ux-profile-fields{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:15px!important;padding:16px!important}
+ #phaseProfile .ux-profile-fields label{grid-column:1/-1!important;width:100%!important;min-width:0!important;max-width:100%!important}
+ #phaseProfile .ux-profile-fields input,#phaseProfile .ux-profile-fields textarea{font-size:16px!important;min-height:44px!important;padding:10px 12px!important;border-radius:10px!important}
+}
+/* Desktop: tidy checklist management controls without changing mobile toolbar */
+@media(min-width:901px){
+ #phaseLists .phase-toolbar{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:10px!important;padding:14px 16px!important;margin:18px 0 22px!important}
+ #phaseLists .phase-toolbar>#phaseAddToggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;width:auto!important;min-width:122px!important;min-height:42px!important;margin:0!important;padding:10px 15px!important;border-radius:10px!important;background:#188c97!important;border:1px solid #188c97!important;color:#fff!important;font-size:14px!important;font-weight:700!important;white-space:nowrap!important;order:0!important}
+ #phaseLists .phase-toolbar>.phase-actions{display:flex!important;align-items:center!important;justify-content:flex-start!important;flex:0 0 auto!important;flex-wrap:nowrap!important;gap:10px!important;margin:0!important;padding:0!important;order:1!important}
+ #phaseLists .phase-toolbar>.phase-actions button{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;min-height:42px!important;min-width:90px!important;width:auto!important;margin:0!important;padding:10px 16px!important;border-radius:10px!important;font-size:14px!important;font-weight:650!important;white-space:nowrap!important}
+ #phaseLists .phase-toolbar>#phaseAdd{order:3!important;flex:1 0 100%!important;width:100%!important;margin:6px 0 0!important;padding:14px!important;border:1px solid #d9e8e8!important;border-radius:12px!important;background:#fff!important;box-sizing:border-box!important}
+ #phaseLists .phase-toolbar>#phaseAdd[hidden]{display:none!important}
+ #phaseLists #phaseSafetyInfo{font-size:0!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;margin:0!important;padding:0!important;border-radius:10px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;order:2!important}
+ #phaseLists #phaseSafetyInfo::before{content:'ⓘ';font-size:24px!important;line-height:1!important}
+}
