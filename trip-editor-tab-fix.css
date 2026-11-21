@@ -1,0 +1,23 @@
+/* Trip editor: single, clean selected-tab treatment. */
+#editor .p2-tabs .p2-tab,
+#editor .p2-tabs .p2-tab.active {
+  box-sizing: border-box;
+  box-shadow: none !important;
+  outline: none;
+  background-clip: padding-box;
+  transform: none;
+}
+#editor .p2-tabs .p2-tab.active {
+  background: #e3f3f1;
+  color: #13545a;
+  border: 1px solid #b9d9d7;
+  border-radius: 11px;
+}
+#editor .p2-tabs .p2-tab.active::before,
+#editor .p2-tabs .p2-tab.active::after {
+  box-shadow: none !important;
+}
+#editor .p2-tabs .p2-tab:focus-visible {
+  outline: 2px solid #147d83;
+  outline-offset: 3px;
+}
