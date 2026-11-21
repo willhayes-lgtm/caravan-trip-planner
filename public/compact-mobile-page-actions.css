@@ -1,0 +1,39 @@
+/* Compact primary page action + dashboard shortcut in one header row */
+@media(max-width:900px){
+ #tripsPage>.toolbar,
+ #wishlistPage>.toolbar,
+ #shoppingPage>.toolbar,
+ #towingPage>.toolbar,
+ #servicePage .section-head.cmh-compact-heading,
+ #payloadPage .section-head.cmh-compact-heading{
+  display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+  align-items:center!important;gap:8px!important;
+  margin-top:8px!important;margin-bottom:10px!important;
+ }
+ .cmh-compact-heading>h2,
+ .cmh-compact-heading>div:first-child{flex:1 1 140px!important;min-width:0!important;margin:0!important}
+ .cmh-compact-heading>div:first-child h2{margin:0!important}
+ .cmh-compact-heading>div:first-child p{display:none!important}
+ .cmh-compact-heading>.actions{display:flex!important;align-items:center!important;margin:0!important;flex:0 0 auto!important;gap:6px!important}
+ .cmh-compact-heading>.actions button,
+ .cmh-compact-heading>button:not(.ux-page-pinbar button){
+  width:auto!important;min-width:0!important;min-height:40px!important;
+  padding:9px 12px!important;font-size:13px!important;line-height:1.1!important;
+  white-space:nowrap!important;margin:0!important
+ }
+ .cmh-compact-heading>.ux-page-pinbar{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;margin:0!important;padding:0!important;
+  order:3!important;width:auto!important
+ }
+ .cmh-compact-heading>.ux-page-pinbar button{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+  padding:0!important;margin:0!important;font-size:23px!important;line-height:1!important;
+  border-radius:11px!important
+ }
+ #tripsPage>.toolbar h2{font-size:clamp(19px,5vw,25px)!important;line-height:1.2!important}
+ #tripsPage>.toolbar{padding:0!important}
+ #tripsPage>.filters-disclosure{margin-top:0!important}
+}
+@media(min-width:901px){.cmh-pin-placeholder{display:none!important}}
