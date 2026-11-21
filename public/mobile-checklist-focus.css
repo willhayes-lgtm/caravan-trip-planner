@@ -1,0 +1,35 @@
+@media(max-width:900px){
+ #checklistsPage .mcf-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+ #checklistsPage .mcf-top>.phase-head{margin:0!important;min-width:0;flex:1}
+ #checklistsPage .mcf-top>.phase-head h2{font-size:23px!important;line-height:1.2;margin:0!important}
+ #checklistsPage .mcf-top>.phase-head p{display:none!important}
+ #checklistsPage .mcf-top>.ux-page-pinbar{margin:0!important;flex:0 0 auto}
+ #checklistsPage .mcf-top #uxPinCurrent{padding:9px!important;min-height:40px;font-size:12px!important;white-space:nowrap}
+ #phaseLists>.phase-card{padding:12px!important}
+ #phaseLists>.phase-card>.phase-head{margin-bottom:8px!important}
+ #phaseLists .phase-checklist-title,#phaseLists .phase-muted,#phaseLists #phaseDescription{display:none!important}
+ #phaseLists .phase-trip{font-size:12px!important;margin:0!important}
+ #phaseLists .phase-trip select{min-height:42px!important;padding:8px!important;font-size:14px!important}
+ #phaseLists #phaseTabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;overflow:visible!important;padding:0!important;margin:9px 0!important}
+ #phaseLists #phaseTabs button{width:100%!important;min-width:0!important;padding:9px 3px!important;font-size:12px!important;white-space:normal!important;min-height:42px!important}
+ #phaseLists #phaseTitle{font-size:16px!important;margin:6px 0 7px!important}
+ #phaseLists #phaseProgress{margin:0 0 8px!important;padding:8px 10px 5px!important}
+ #phaseLists .phase-progress{height:7px!important;margin:6px 0 3px!important}
+ #phaseLists .mcf-actions{display:flex;justify-content:flex-end;margin:0 0 8px}
+ #phaseLists .mcf-manage{position:relative;margin-left:auto}
+ #phaseLists .mcf-manage>summary{cursor:pointer;list-style:none;border:1px solid #c9dedf;border-radius:9px;padding:8px 10px;color:#164b5b;background:#f1f7f7;font-size:13px;font-weight:700;min-height:38px;box-sizing:border-box}
+ #phaseLists .mcf-manage>summary::-webkit-details-marker{display:none}
+ #phaseLists .mcf-panel{position:absolute;right:0;top:calc(100% + 5px);z-index:35;width:min(270px,calc(100vw - 48px));background:#fff;border:1px solid #cddfe1;border-radius:12px;padding:12px;box-shadow:0 12px 30px #123f5233;display:flex;flex-direction:column;gap:8px}
+ #phaseLists .mcf-manage:not([open]) .mcf-panel{display:none!important}
+ #phaseLists .mcf-panel .phase-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin:0!important}
+ #phaseLists .mcf-panel .phase-actions button{min-width:0!important;padding:9px!important}
+ #phaseLists .mcf-panel .phase-add-toggle{width:100%;margin:0!important}
+ #phaseLists .mcf-panel #phaseAdd{padding:8px!important}
+ #phaseLists .mcf-panel .phase-safety-info{margin:0!important;align-self:flex-start}
+ #phaseLists .phase-task{padding:10px 11px!important;gap:10px!important;min-height:54px}
+ #phaseLists .phase-task input[type=checkbox]{width:27px!important;height:27px!important}
+ #phaseLists .phase-task-title{font-size:14px!important;line-height:1.35}
+ #phaseLists .phase-task small{font-size:12px!important;line-height:1.35}
+ #phaseLists .phase-list{gap:6px!important}
+}
+@media(prefers-reduced-motion:reduce){#phaseLists .phase-progress>span{transition:none!important}}

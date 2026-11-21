@@ -13,7 +13,24 @@ function draw(){if(!loaded)return;const its=items(),done=checked(),percent=its.l
  $('#phaseTabs').innerHTML=data.templates.map(t=>`<button type="button" data-template="${esc(t.id)}" class="${t.id===active?'active':''}" aria-pressed="${t.id===active}">${esc(t.title)}</button>`).join('');
  $('#phaseTrip').innerHTML=options();$('#phaseTrip').value=trip;
  $('#phaseTitle').textContent=data.templates.find(t=>t.id===active)?.title||'Checklist';$('#phaseDescription').textContent=data.templates.find(t=>t.id===active)?.description||'';
- $('#phaseProgress').innerHTML=`<div class="phase-progress-label"><span>${its.filter(x=>done.has(x.id)).length} of ${its.length} completed</span><span>${percent}%</span></div><div class="phase-progress"><span style="width:${percent}%"></span></div>`;
+ const progress=$('#phaseProgress'),key=active+'|'+trip,priorKey=progress.dataset.key;
+ const previous=Number(progress.dataset.percent||0),count=its.filter(x=>done.has(x.id)).length;
+ if(!progress.querySelector('.phase-progress>span'))progress.innerHTML='<div class="phase-progress-label"><span class="mcf-count"></span><span class="mcf-percent">0%</span></div><div class="phase-progress"><span></span></div>';
+ progress.querySelector('.mcf-count').textContent=`${count} of ${its.length} completed`;
+ const bar=progress.querySelector('.phase-progress>span'),label=progress.querySelector('.mcf-percent');
+ const start=priorKey===key?previous:percent,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(progress._frame)cancelAnimationFrame(progress._frame);
+ if(progress._innerFrame)cancelAnimationFrame(progress._innerFrame);
+ if(progress._counter)cancelAnimationFrame(progress._counter);
+ bar.style.transition=reduced?'none':'width 450ms cubic-bezier(.22,1,.36,1)';
+ bar.style.width=start+'%';label.textContent=Math.round(start)+'%';
+ progress.dataset.key=key;progress.dataset.percent=String(percent);
+ if(reduced||start===percent){bar.style.width=percent+'%';label.textContent=percent+'%';}
+ else{
+  progress._frame=requestAnimationFrame(()=>{progress._innerFrame=requestAnimationFrame(()=>bar.style.width=percent+'%')});
+  const begin=performance.now();const tick=now=>{const t=Math.min(1,(now-begin)/450),ease=1-(1-t)**3;label.textContent=Math.round(start+(percent-start)*ease)+'%';if(t<1)progress._counter=requestAnimationFrame(tick)};
+  progress._counter=requestAnimationFrame(tick);
+ }
  $('#phaseItems').classList.toggle('phase-editmode',edit);
  $('#phaseItems').innerHTML=its.map((x,i)=>`<div class="phase-task ${done.has(x.id)?'checked':''}" data-id="${esc(x.id)}" draggable="${edit}">${edit?'<span class="phase-drag" title="Drag to reorder">⠿</span>':''}<input type="checkbox" data-check="${esc(x.id)}" ${done.has(x.id)?'checked':''} ${edit?'disabled':''} aria-label="Complete ${esc(x.title)}"><div class="phase-task-main"><div class="phase-task-title">${esc(x.title)}</div>${x.guidance?`<small>${esc(x.guidance)}</small>`:''}</div>${edit?`<div class="phase-task-actions"><button class="secondary" data-up="${esc(x.id)}" ${i===0?'disabled':''} title="Move up">↑</button><button class="secondary" data-down="${esc(x.id)}" ${i===its.length-1?'disabled':''} title="Move down">↓</button><button class="secondary" data-edit="${esc(x.id)}">Edit</button><button class="secondary danger" data-delete="${esc(x.id)}">Delete</button></div>`:''}</div>`).join('')||'<div class="phase-empty">No tasks yet. Add your first task.</div>';
  $('#phaseAdd').hidden=$('#phaseAddToggle').getAttribute('aria-expanded')!=='true';$('#phaseAddToggle').hidden=false;$('#phaseEdit').textContent=edit?'Done':'Edit';$('#phaseReset').textContent='Reset';$('#phaseReset').disabled=!run||!done.size;
