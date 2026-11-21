@@ -37,3 +37,30 @@
  #tripsPage>.filters-disclosure{margin-top:0!important}
 }
 @media(min-width:901px){.cmh-pin-placeholder{display:none!important}}
+
+/* CMH dashboard icon overflow fix v2 */
+@media (max-width:900px){
+ .cmh-compact-heading>.ux-page-pinbar.cmh-in-heading{
+   flex:0 0 42px!important;width:42px!important;min-width:42px!important;max-width:42px!important;
+ }
+ .cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent{
+   position:relative!important;display:inline-flex!important;flex:0 0 42px!important;
+   align-items:center!important;justify-content:center!important;
+   width:42px!important;min-width:42px!important;max-width:42px!important;
+   height:42px!important;min-height:42px!important;max-height:42px!important;
+   box-sizing:border-box!important;overflow:hidden!important;white-space:nowrap!important;
+   text-indent:0!important;font-size:0!important;line-height:0!important;
+   letter-spacing:0!important;padding:0!important;margin:0!important;
+   border-radius:11px!important;isolation:isolate!important;
+ }
+ .cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent::before{
+   content:"▦";display:block;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+   font-size:23px!important;line-height:1!important;font-weight:650!important;color:#164b5b;
+ }
+ .cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent[aria-pressed="true"]{
+   background:#d6eeee!important;border-color:#258b94!important;
+ }
+ .cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent[aria-pressed="true"]::before{
+   content:"✓";color:#176c74;
+ }
+}
