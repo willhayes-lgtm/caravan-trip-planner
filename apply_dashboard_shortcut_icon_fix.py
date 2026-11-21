@@ -10,7 +10,7 @@ old=css.read_text()
 page=html.read_text()
 marker='/* CMH dashboard icon overflow fix v2 */'
 if marker in old: raise SystemExit('Fix already installed. Do not run twice.')
-if 'cmh-in-heading' not in old or '/compact-mobile-page-actions.css' not in page:
+if '/compact-mobile-page-actions.css' not in page:
     raise SystemExit('Existing compact page actions version not recognised; no changes made.')
 fix='''
 /* CMH dashboard icon overflow fix v2 */
