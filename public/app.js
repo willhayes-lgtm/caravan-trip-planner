@@ -123,8 +123,9 @@ $('#tripForm').onsubmit=async e=>{
  catch(err){alert(err.message+'\n\nYour edits have been kept in the form.');}
  finally{if(submit)submit.disabled=false}
 };
-$('#export').onclick=()=>{
- const blob=new Blob([JSON.stringify({format:'caravan-planner-v1',exported_at:new Date().toISOString(),trips},null,2)],{type:'application/json'});
+$('#export').onclick=async()=>{
+ let inventory=[];try{const r=await fetch('/api/payload');if(!r.ok)throw Error('Payload backup unavailable');inventory=(await r.json()).items||[]}catch(e){alert('Could not export inventory. Backup cancelled to avoid incomplete data.');return}
+ const blob=new Blob([JSON.stringify({format:'caravan-planner-v1',exported_at:new Date().toISOString(),trips,inventory},null,2)],{type:'application/json'});
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='caravan-planner-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
 $('#import').onclick=()=>$('#file').click();
