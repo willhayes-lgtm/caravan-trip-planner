@@ -1,0 +1,19 @@
+/* Settings data management: real modal outside clipped sidebar. */
+#settingsDataDialog{border:0;padding:0;width:min(460px,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:min(85dvh,760px);border-radius:20px;background:#fff;color:#123f52;box-shadow:0 24px 90px #102c3e55;overflow:hidden}
+#settingsDataDialog::backdrop{background:rgba(9,33,47,.56);backdrop-filter:blur(2px)}
+#settingsDataDialog .settings-modal-inner{display:flex;flex-direction:column;max-height:min(85dvh,760px);min-height:0}
+#settingsDataDialog .settings-modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 22px;border-bottom:1px solid #dbe8e8}
+#settingsDataDialog .settings-modal-head h2{margin:0;font-size:21px;line-height:1.25}
+#settingsDataDialog .settings-modal-close{display:grid;place-items:center;width:42px;height:42px;min-width:42px;padding:0;border:1px solid #d6e5e5;border-radius:11px;background:#edf5f4;color:#123f52;font-size:24px;cursor:pointer}
+#settingsDataDialog .settings-modal-body{overflow:auto;overscroll-behavior:contain;padding:20px 22px 24px;min-height:0}
+#settingsDataDialog .data-menu-panel{position:static!important;inset:auto!important;display:grid!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;gap:13px!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+#settingsDataDialog .data-menu-panel>strong{font-size:16px}
+#settingsDataDialog .data-menu-panel p{font-size:14px;line-height:1.5}
+#settingsDataDialog .data-menu-panel button{display:block;width:100%;min-height:46px;text-align:left;border-radius:11px;padding:11px 14px}
+#settingsDataDialog #file[hidden]{display:none!important}
+@media(max-width:600px){
+ #settingsDataDialog{position:fixed;inset:auto 0 0!important;margin:0!important;width:100%!important;max-width:100%!important;max-height:85dvh!important;border-radius:22px 22px 0 0!important}
+ #settingsDataDialog .settings-modal-inner{max-height:85dvh}
+ #settingsDataDialog .settings-modal-head{padding:16px 18px}
+ #settingsDataDialog .settings-modal-body{padding:18px 18px max(22px,env(safe-area-inset-bottom))}
+}
