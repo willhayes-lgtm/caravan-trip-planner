@@ -4,7 +4,8 @@
 #payloadPage .phase2, #payloadPage #payloadTab {min-width:0;max-width:100%}
 #payloadPage .section-head {min-width:0;max-width:100%;gap:14px}
 #payloadPage .section-head > div:first-child {min-width:0}
-#payloadPage .inventory-actions {display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-width:0}
+#payloadPage .inventory-actions {display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-width:0;max-width:100%;width:100%;overflow:hidden}
+#payloadPage .inventory-actions > * {min-width:0;max-width:100%}
 #payloadPage .inventory-actions > button {white-space:nowrap;min-height:44px}
 #payloadPage #inventoryFile[hidden] {display:none!important}
 #payloadPage .payload-more {display:none;position:relative}
@@ -14,21 +15,27 @@
 #payloadPage .payload-more-panel {position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:min(255px,calc(100vw - 36px));background:#fff;border:1px solid #d8e6e7;border-radius:14px;box-shadow:0 12px 30px rgba(0,34,46,.16);padding:7px;display:grid;gap:5px}
 #payloadPage .payload-more-panel button {width:100%;min-height:44px;text-align:left;border:0;border-radius:9px;white-space:normal;background:transparent;color:#123e4d;padding:10px 12px;font-size:14px}
 #payloadPage .payload-more-panel button:hover,#payloadPage .payload-more-panel button:focus-visible {background:#eaf4f4}
+#payloadPage .payload-help {display:flex;justify-content:flex-start;margin:4px 0 14px}
+#payloadPage .payload-help-trigger {display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:10px 14px;border-radius:12px;border:1px solid #d5e6e7;background:#edf5f5;color:#123e4d;font-weight:700}
+#payloadPage .payload-help-icon {display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#198e94;color:#fff;font-size:14px;font-weight:700;flex:0 0 24px}
+#payloadPage .payload-help-panel {margin-top:10px;width:min(100%,720px)}
 @media(max-width:680px){
  html,body {max-width:100%;overflow-x:clip}
  main, #payloadPage, #payloadPage .phase2, #payloadPage .section-head, #payloadPage .payload-summary, #payloadPage #payloadItems {width:100%;min-width:0;max-width:100%}
  #payloadPage .section-head {display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:13px!important;margin-bottom:16px!important}
  #payloadPage .section-head h2 {font-size:clamp(23px,6vw,30px)!important;line-height:1.18;overflow-wrap:anywhere}
  #payloadPage .section-head p {margin:6px 0 0}
- #payloadPage .inventory-actions {display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:9px!important;width:100%!important;align-items:stretch}
- #payloadPage .inventory-actions > #newPayload {grid-column:1;grid-row:1;width:100%!important;min-width:0!important;justify-content:center;min-height:48px!important;padding:10px 12px!important}
- #payloadPage .inventory-actions > #importInventory, #payloadPage .inventory-actions > #exportInventory {display:none!important}
- #payloadPage .payload-more {display:block;grid-column:2;grid-row:1;min-width:48px}
+ #payloadPage .inventory-actions {display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:9px!important;width:100%!important;align-items:stretch!important;overflow:hidden!important}
+ #payloadPage .inventory-actions > #newPayload {grid-column:1;grid-row:1;width:100%!important;min-width:0!important;max-width:100%!important;justify-content:center;min-height:48px!important;padding:10px 12px!important}
+ #payloadPage .inventory-actions > #importInventory, #payloadPage .inventory-actions > #exportInventory, #payloadPage .inventory-actions > button:not(#newPayload) {display:none!important}
+ #payloadPage .payload-more {display:block!important;grid-column:2;grid-row:1;min-width:48px;max-width:48px}
  #payloadPage .payload-summary {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:stretch}
  #payloadPage .payload-summary > .stat {min-width:0!important;width:auto!important;max-width:100%!important;margin:0!important;padding:15px 13px!important;min-height:110px!important;display:flex!important;flex-direction:column;justify-content:space-between;gap:8px;border-radius:15px}
  #payloadPage .payload-summary > .stat small {font-size:12px!important;line-height:1.4!important;overflow-wrap:anywhere}
  #payloadPage .payload-summary > .stat strong {font-size:clamp(18px,5vw,26px)!important;line-height:1.2!important;overflow-wrap:anywhere;letter-spacing:-.03em}
- #payloadPage .notice {max-width:100%;overflow-wrap:anywhere}
+ #payloadPage .payload-help {margin:2px 0 14px}
+ #payloadPage .payload-help-trigger {width:auto;max-width:100%;padding:10px 12px}
+ #payloadPage .payload-help-panel {max-width:100%;overflow-wrap:anywhere}
  #payloadPage .filters {min-width:0;max-width:100%;flex-wrap:wrap}
  #payloadPage .record,#payloadPage .record * {min-width:0}
  #payloadPage .record {max-width:100%;overflow-wrap:anywhere}
