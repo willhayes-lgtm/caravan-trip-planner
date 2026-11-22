@@ -45,6 +45,22 @@ function draw(){if(!loaded)return;const its=items(),done=checked(),percent=its.l
 async function refresh(){data=await req('checklists?trip_id='+encodeURIComponent(trip));run=getRun();draw();}
 async function ensureRun(){if(run)return run;const v=await req('checklists','POST',{action:'run',template_id:active,trip_id:trip});await refresh();return run||{id:v.id};}
 async function updateOrder(ids){await req('checklists','PUT',{action:'reorder',template_id:active,ids});await refresh();}
+/* PROFILE_PATCH_20261122 */
+function profileField(key,label,type){
+ const val=dimensionKeys.has(key)?metresFromMm(profile[key]):(profile[key]??'');
+ if(key==='warranty_notes')return `<label class="wide"><span>${esc(label)}</span><textarea name="${key}" rows="3">${esc(val)}</textarea></label>`;
+ if(key==='axles')return `<label><span>Axle configuration</span><select name="axles"><option value="">Select axle type</option><option value="1" ${String(val)==='1'?'selected':''}>Single axle</option><option value="2" ${String(val)==='2'?'selected':''}>Twin axle</option></select></label>`;
+ if(key==='noseweight_limit_kg')return `<label><span>${esc(label)}</span><input name="${key}" type="number" min="0" step="any" value="${esc(val)}"><span class="profile-nose-guide"><strong data-nose-guide></strong><small>85% planning reference only — not a required loading target. Follow manufacturer limits.</small></span></label>`;
+ if(key==='tyre_size')return `<label><span>${esc(label)}</span><input name="${key}" placeholder="185/80 R14 104N" pattern="[0-9]{3}/[0-9]{2,3} *[Rr] *[0-9]{2}( +[0-9]{2,3}[A-Za-z])?" title="Example: 185/80 R14 104N" value="${esc(val)}"><small class="profile-field-help">Width/profile R rim, optionally load index and speed rating. Check your tyre sidewall.</small></label>`;
+ if(key==='insurance_contact'||key==='breakdown_contact')return `<label><span>${esc(label)}</span><input name="${key}" type="tel" value="${esc(val)}"><span class="profile-call-container" data-call="${key}"></span></label>`;
+ return `<label><span>${esc(label)}</span><input name="${key}" type="${type||'text'}" ${type==='number'?'min="0" step="any"':''} value="${esc(val)}"></label>`;
+}
+function updateProfileExtras(){
+ const root=$('#phaseProfileForm');if(!root)return;
+ const nose=root.querySelector('[name="noseweight_limit_kg"]'),guide=root.querySelector('[data-nose-guide]');
+ if(nose&&guide){const n=Number(nose.value);guide.textContent=nose.value.trim()!==''&&Number.isFinite(n)&&n>0?`85% reference: ${(n*.85).toLocaleString('en-GB',{maximumFractionDigits:1})} kg`:'Enter noseweight limit';}
+ for(const key of ['insurance_contact','breakdown_contact']){const inp=root.querySelector(`[name="${key}"]`),slot=root.querySelector(`[data-call="${key}"]`);if(!inp||!slot)continue;const number=inp.value.trim(),dial=number.replace(/[^+0-9]/g,'');slot.replaceChildren();if(/^\+?[0-9]{6,15}$/.test(dial)){const a=document.createElement('a');a.href='tel:'+dial;a.className='profile-call-link';a.textContent='☎ Call '+number;slot.append(a);}}
+}
 function renderProfile(){
  const root=$('#phaseProfileForm');
  const descriptions={
@@ -56,8 +72,9 @@ function renderProfile(){
  };
  root.innerHTML=fieldDefs.map(([section,fields],i)=>{
   const [icon,title,description]=descriptions[section]||['📋',section,'Caravan details'];
-  return `<section class="ux-profile-group" aria-labelledby="ux-profile-heading-${i}"><div class="ux-profile-group-head"><span class="ux-profile-icon" aria-hidden="true">${icon}</span><div><h3 id="ux-profile-heading-${i}">${esc(title)}</h3><p>${esc(description)}</p></div></div><div class="ux-profile-fields">${fields.map(([key,label,type])=>`<label class="${key==='warranty_notes'?'wide':''}"><span>${esc(label)}</span>${key==='warranty_notes'?`<textarea name="${key}" rows="3">${esc(profile[key]??'')}</textarea>`:`<input name="${key}" type="${type||'text'}" ${type==='number'?'min="0" step="any"':''} value="${esc(dimensionKeys.has(key)?metresFromMm(profile[key]):(profile[key]??''))}">`}</label>`).join('')}</div></section>`;
+  return `<section class="ux-profile-group" aria-labelledby="ux-profile-heading-${i}"><div class="ux-profile-group-head"><span class="ux-profile-icon" aria-hidden="true">${icon}</span><div><h3 id="ux-profile-heading-${i}">${esc(title)}</h3><p>${esc(description)}</p></div></div><div class="ux-profile-fields">${fields.map(([key,label,type])=>profileField(key,label,type)).join('')}</div></section>`;
  }).join('');
+ updateProfileExtras();
 }
 function setup(){const nav=$('.main-nav'),main=$('main');if(!nav||!main)return;
  const navButton=document.createElement('button');navButton.type='button';navButton.className='nav-button';navButton.dataset.page='checklists';navButton.textContent='☑ Checklists & Profile';nav.append(navButton);
@@ -86,6 +103,7 @@ function setup(){const nav=$('.main-nav'),main=$('main');if(!nav||!main)return;
   const [moved]=ids.splice(from,1);ids.splice(to,0,moved);
   try{await updateOrder(ids)}catch(err){alertError(err)}
  });
+ $('#phaseProfileForm').addEventListener('input',e=>{if(['noseweight_limit_kg','insurance_contact','breakdown_contact'].includes(e.target.name))updateProfileExtras()});
  $('#phaseProfileSave').onsubmit=async e=>{e.preventDefault();try{const values=Object.fromEntries(new FormData(e.target));for(const key of dimensionKeys){if(Object.hasOwn(values,key))values[key]=mmFromMetres(values[key]);}profile=await req('caravan-profile','PUT',values);renderProfile();$('#phaseError').textContent='';window.caravanUXToast?.('Caravan profile saved')}catch(err){alertError(err)}};
  async function load(){try{if(!loaded){[trips,profile]=await Promise.all([req('trips'),req('caravan-profile')]);renderProfile();loaded=true;}await refresh();$('#phaseError').textContent='';}catch(err){alertError(err)}}
  }
