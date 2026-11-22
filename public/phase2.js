@@ -16,9 +16,9 @@ $('#payloadForm').addEventListener('submit',async e=>{e.preventDefault();const f
 // Import is additive: matching item names are skipped to preserve existing onboard and MIRO choices.
 const inventoryFields=['title','category','weight_kg','quantity','included_in_miro','packed','equipment_type'];
 function downloadJson(name,obj){const url=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-$('#exportInventory').onclick=()=>downloadJson('caravan-inventory.json',{format:'caravan-inventory-v1',exported_at:new Date().toISOString(),items:payload.map(x=>Object.fromEntries(inventoryFields.map(k=>[k,x[k]])))});
-$('#importInventory').onclick=()=>$('#inventoryFile').click();
-$('#inventoryFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
+if($('#exportInventory'))$('#exportInventory').onclick=()=>downloadJson('caravan-inventory.json',{format:'caravan-inventory-v1',exported_at:new Date().toISOString(),items:payload.map(x=>Object.fromEntries(inventoryFields.map(k=>[k,x[k]])))});
+if($('#importInventory'))$('#importInventory').onclick=()=>$('#inventoryFile').click();
+if($('#inventoryFile'))$('#inventoryFile').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{
  const obj=JSON.parse(await file.text());const rows=obj.format==='caravan-inventory-v1'?obj.items:obj.format==='caravan-planner-v1'?obj.inventory:undefined;
  if(!Array.isArray(rows)||rows.length>500)throw Error('Expected a caravan-inventory-v1 file with an items array (maximum 500).');
  const known=new Set(payload.map(x=>x.title.trim().toLocaleLowerCase()));const seen=new Set();const candidates=[];let duplicates=0;
