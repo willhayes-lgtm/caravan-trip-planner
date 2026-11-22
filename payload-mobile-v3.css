@@ -1,0 +1,33 @@
+
+/* v3 — scoped mobile fixes for the actual /phase2.html page */
+#payloadTab, #payloadTab * {box-sizing:border-box}
+#payloadTab, #payloadTab .section-head, #payloadTab .payload-summary {min-width:0;max-width:100%}
+#payloadTab .inventory-actions {display:flex;flex-wrap:wrap;gap:10px;min-width:0;max-width:100%}
+#payloadTab .inventory-actions > button {white-space:nowrap}
+#payloadTab #inventoryFile[hidden] {display:none!important}
+#payloadTab .payload-more {display:none;position:relative;min-width:0}
+#payloadTab .payload-more > summary {list-style:none;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:12px;border:1px solid #d5e6e7;background:#e5f2f3;color:#123e4d;min-width:50px;min-height:48px;padding:6px 12px;font-size:25px;font-weight:700;line-height:1}
+#payloadTab .payload-more > summary::-webkit-details-marker {display:none}
+#payloadTab .payload-more-panel {position:absolute;right:0;top:calc(100% + 7px);z-index:100;display:grid;gap:5px;width:min(260px,calc(100vw - 44px));padding:8px;background:#fff;border:1px solid #d4e4e5;border-radius:13px;box-shadow:0 14px 34px rgba(10,42,50,.19)}
+#payloadTab .payload-more-panel button {display:block;width:100%;min-height:44px;padding:10px 12px;text-align:left;background:#edf5f5;border:0;border-radius:8px;color:#123e4d;white-space:normal;font:inherit;font-size:14px}
+#payloadTab .payload-help {display:block;width:100%;max-width:100%;margin:12px 0 16px}
+#payloadTab .payload-help > summary {list-style:none;display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:1px solid #d5e6e7;border-radius:12px;background:#edf5f5;color:#123e4d;padding:10px 14px;min-height:44px;font-weight:700}
+#payloadTab .payload-help > summary::-webkit-details-marker {display:none}
+#payloadTab .payload-help-icon {display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#168d91;color:#fff;font-weight:700;flex-shrink:0}
+#payloadTab .payload-help-panel {margin:10px 0 0;overflow-wrap:anywhere;max-width:100%}
+@media(max-width:680px){
+  html,body {max-width:100%;overflow-x:clip}
+  .phase-shell,.phase-content,.phase-content main,.phase2,#payloadTab {min-width:0;max-width:100%}
+  #payloadTab .section-head {display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;gap:12px!important}
+  #payloadTab .section-head > div:first-child {min-width:0;max-width:100%}
+  #payloadTab .inventory-actions {display:grid!important;grid-template-columns:minmax(0,1fr) 50px!important;gap:10px!important;width:100%!important;max-width:100%!important;min-width:0!important;align-items:stretch!important;overflow:visible!important}
+  #payloadTab .inventory-actions > #importInventory,
+  #payloadTab .inventory-actions > #exportInventory {display:none!important}
+  #payloadTab .inventory-actions > #newPayload {grid-column:1!important;grid-row:1!important;display:flex!important;justify-content:center!important;align-items:center!important;min-width:0!important;max-width:100%!important;width:100%!important;min-height:48px!important;margin:0!important;padding:10px 12px!important}
+  #payloadTab .inventory-actions > .payload-more {display:block!important;grid-column:2!important;grid-row:1!important;width:50px!important;max-width:50px!important}
+  #payloadTab .payload-summary {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;width:100%!important}
+  #payloadTab .payload-summary > .stat {min-width:0!important;width:auto!important;max-width:100%!important;min-height:110px!important;margin:0!important;padding:15px 12px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;gap:8px!important}
+  #payloadTab .payload-summary > .stat strong {font-size:clamp(18px,5vw,25px)!important;overflow-wrap:anywhere}
+  #payloadTab .payload-summary > .stat small {font-size:12px!important;overflow-wrap:anywhere}
+  #payloadTab .record {max-width:100%;overflow-wrap:anywhere}
+}
