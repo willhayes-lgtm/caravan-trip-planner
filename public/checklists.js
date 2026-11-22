@@ -51,9 +51,33 @@ function profileField(key,label,type){
  if(key==='warranty_notes')return `<label class="wide"><span>${esc(label)}</span><textarea name="${key}" rows="3">${esc(val)}</textarea></label>`;
  if(key==='axles')return `<label><span>Axle configuration</span><select name="axles"><option value="">Select axle type</option><option value="1" ${String(val)==='1'?'selected':''}>Single axle</option><option value="2" ${String(val)==='2'?'selected':''}>Twin axle</option></select></label>`;
  if(key==='noseweight_limit_kg')return `<label><span>${esc(label)}</span><input name="${key}" type="number" min="0" step="any" value="${esc(val)}"><span class="profile-nose-guide"><strong data-nose-guide></strong><small>85% planning reference only — not a required loading target. Follow manufacturer limits.</small></span></label>`;
- if(key==='tyre_size')return `<label><span>${esc(label)}</span><input name="${key}" placeholder="185/80 R14 104N" pattern="[0-9]{3}/[0-9]{2,3} *[Rr] *[0-9]{2}( +[0-9]{2,3}[A-Za-z])?" title="Example: 185/80 R14 104N" value="${esc(val)}"><small class="profile-field-help">Width/profile R rim, optionally load index and speed rating. Check your tyre sidewall.</small></label>`;
+ if(key==='tyre_size'){
+  const match=String(val).trim().match(/^(\d{3})\s*\/\s*(\d{2,3})\s*R\s*(\d{2})(?:\s+(\d{2,3})([A-Za-z]))?$/i);
+  const parts=match?[match[1],match[2],match[3],match[4]||'',match[5]||'']:['','','','',''];
+  const names=['Width (mm)','Profile (%)','Rim (inches)','Load index','Speed rating'];
+  const ids=['width','profile','rim','load','speed'];
+  const controls=ids.map((id,i)=>`<label class="tyre-segment"><span>${names[i]}</span><input data-tyre-part="${id}" type="text" inputmode="${id==='speed'?'text':'numeric'}" autocomplete="off" maxlength="${id==='width'||id==='profile'||id==='load'?3:id==='rim'?2:1}" placeholder="${['185','80','14','104','N'][i]}" value="${esc(parts[i])}"></label>`).join('');
+  return `<div class="tyre-field wide"><span class="tyre-field-title">Tyre size</span><div class="tyre-segments">${controls}</div><input type="hidden" name="tyre_size" value="${esc(val)}"><div class="tyre-preview" data-tyre-preview aria-live="polite"></div><small class="profile-field-help">Enter the specification printed on your tyre sidewall. Load index and speed rating are optional.</small></div>`;
+ }
  if(key==='insurance_contact'||key==='breakdown_contact')return `<label><span>${esc(label)}</span><input name="${key}" type="tel" value="${esc(val)}"><span class="profile-call-container" data-call="${key}"></span></label>`;
  return `<label><span>${esc(label)}</span><input name="${key}" type="${type||'text'}" ${type==='number'?'min="0" step="any"':''} value="${esc(val)}"></label>`;
+}
+function updateTyreSize(root){
+ const hidden=root.querySelector('input[name="tyre_size"]');
+ if(!hidden)return;
+ const parts=[...root.querySelectorAll('[data-tyre-part]')];
+ if(parts.length!==5)return;
+ const [width,profile,rim,load,speed]=parts.map(x=>x.value.trim().toUpperCase());
+ const any=parts.some(x=>x.value.trim());
+ const core=width&&profile&&rim?`${width}/${profile} R${rim}`:'';
+ const suffix=load&&speed?` ${load}${speed}`:'';
+ const output=core+suffix;
+ const valid=!any||(/^\d{3}$/.test(width)&&/^\d{2,3}$/.test(profile)&&/^\d{2}$/.test(rim)&&(!load&&!speed||/^\d{2,3}$/.test(load)&&/^[A-Z]$/.test(speed)));
+ // Preserve any old unrecognised tyre size until the user edits structured fields.
+ if(root.dataset.tyreChanged==='true')hidden.value=any?output:'';
+ const preview=root.querySelector('[data-tyre-preview]');
+ if(preview){preview.textContent=valid?(output?'Tyre specification: '+output:'Enter tyre dimensions above'):'Complete width, profile and rim; supply both load index and speed rating if used.';preview.classList.toggle('tyre-invalid',!valid)}
+ hidden.setCustomValidity(valid?'':'Enter a valid tyre specification, e.g. 185/80 R14 104N');
 }
 function updateProfileExtras(){
  const root=$('#phaseProfileForm');if(!root)return;
@@ -62,7 +86,7 @@ function updateProfileExtras(){
  for(const key of ['insurance_contact','breakdown_contact']){const inp=root.querySelector(`[name="${key}"]`),slot=root.querySelector(`[data-call="${key}"]`);if(!inp||!slot)continue;const number=inp.value.trim(),dial=number.replace(/[^+0-9]/g,'');slot.replaceChildren();if(/^\+?[0-9]{6,15}$/.test(dial)){const a=document.createElement('a');a.href='tel:'+dial;a.className='profile-call-link';a.textContent='☎ Call '+number;slot.append(a);}}
 }
 function renderProfile(){
- const root=$('#phaseProfileForm');
+ const root=$('#phaseProfileForm');root.dataset.tyreChanged='false';
  const descriptions={
   'Identity':['🚐','Your caravan','The key details identifying your caravan.'],
   'Dimensions & weights':['⚖️','Dimensions & weights','Important for towing, campsite access and payload calculations.'],
@@ -75,8 +99,9 @@ function renderProfile(){
   return `<section class="ux-profile-group" aria-labelledby="ux-profile-heading-${i}"><div class="ux-profile-group-head"><span class="ux-profile-icon" aria-hidden="true">${icon}</span><div><h3 id="ux-profile-heading-${i}">${esc(title)}</h3><p>${esc(description)}</p></div></div><div class="ux-profile-fields">${fields.map(([key,label,type])=>profileField(key,label,type)).join('')}</div></section>`;
  }).join('');
  updateProfileExtras();
+ updateTyreSize(root);
 }
-function setup(){const nav=$('.main-nav'),main=$('main');if(!nav||!main)return;
+function setup(){if(!document.getElementById('tyre-segment-style')){const style=document.createElement('style');style.id='tyre-segment-style';style.textContent='#phaseProfileForm .tyre-field{display:block;min-width:0}#phaseProfileForm .tyre-field-title{display:block;font-weight:600;margin-bottom:9px}#phaseProfileForm .tyre-segments{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}#phaseProfileForm .tyre-segment{display:flex;flex-direction:column;gap:5px;min-width:0}#phaseProfileForm .tyre-segment span{font-size:12px;font-weight:600}#phaseProfileForm .tyre-segment input{width:100%;min-width:0;box-sizing:border-box}#phaseProfileForm .tyre-preview{margin-top:10px;padding:9px 12px;border-radius:8px;background:#eff4f8;font-weight:600}#phaseProfileForm .tyre-preview.tyre-invalid{color:#a21d27;background:#fff1f1}@media(max-width:480px){#phaseProfileForm .tyre-segments{grid-template-columns:repeat(2,minmax(0,1fr))}}';document.head.append(style)}const nav=$('.main-nav'),main=$('main');if(!nav||!main)return;
  const navButton=document.createElement('button');navButton.type='button';navButton.className='nav-button';navButton.dataset.page='checklists';navButton.textContent='☑ Checklists & Profile';nav.append(navButton);
  const page=document.createElement('section');page.id='checklistsPage';page.className='subpage';page.hidden=true;page.innerHTML=`<div class="phase-head"><div><h2>Caravan companion</h2><p>Reusable safety checklists and your caravan specifications.</p></div></div><div class="phase-tabs"><button class="active" data-section="lists">☑ Checklists</button><button data-section="profile">🚐 Caravan profile</button></div><div id="phaseError" class="phase-error" role="alert"></div><div id="phaseLists"><div class="phase-card"><div class="phase-head"><div><h3 class="phase-checklist-title">Your checklists</h3><p class="phase-muted">Tick as you go, customise the order and reset for your next journey.</p></div><label class="phase-trip">Trip (optional)<select id="phaseTrip"></select></label></div><div class="phase-tabs" id="phaseTabs"></div><div class="phase-checklist-topline"><h3 id="phaseTitle"></h3><button type="button" id="phaseSafetyInfo" class="phase-safety-info" aria-label="Read checklist safety reminder" title="Safety information">ⓘ</button></div><p class="phase-subtitle" id="phaseDescription"></p><div id="phaseProgress"></div><dialog id="phaseSafetyDialog" class="phase-safety-dialog"><h3>Safety reminder</h3><p>These checklists are prompts, not certification of roadworthiness. Always follow the specific caravan, coupling and tow vehicle manufacturers' instructions.</p><button type="button" id="phaseSafetyClose">Got it</button></dialog><div class="phase-toolbar"><button type="button" id="phaseAddToggle" class="secondary phase-add-toggle" hidden aria-expanded="false" aria-controls="phaseAdd">+ Add task</button><form id="phaseAdd" class="phase-add" hidden><label>New task<input name="title" required maxlength="200" placeholder="e.g. Secure bike rack"></label><label>Optional guidance<input name="guidance" maxlength="1000" placeholder="Extra instructions"></label><button>Add task</button></form><div class="phase-actions"><button type="button" id="phaseEdit" class="secondary">Edit</button><button type="button" id="phaseReset" class="secondary">Reset</button></div></div><div id="phaseItems" class="phase-list"></div></div></div><div id="phaseProfile" hidden><div class="phase-card"><div class="ux-profile-intro"><span class="ux-profile-eyebrow">MY CARAVAN</span><h3>Caravan specifications</h3><p>Keep your caravan details in one place. Fields are optional; confirm technical figures against the handbook or weight plate.</p></div><form id="phaseProfileSave"><div class="phase-form" id="phaseProfileForm"></div><div class="phase-actions"><button type="submit">Save caravan details</button></div></form></div></div>`;
  const target=$('#maintenancePage')||$('#towingPage');target.insertAdjacentElement('afterend',page);
@@ -103,8 +128,8 @@ function setup(){const nav=$('.main-nav'),main=$('main');if(!nav||!main)return;
   const [moved]=ids.splice(from,1);ids.splice(to,0,moved);
   try{await updateOrder(ids)}catch(err){alertError(err)}
  });
- $('#phaseProfileForm').addEventListener('input',e=>{if(['noseweight_limit_kg','insurance_contact','breakdown_contact'].includes(e.target.name))updateProfileExtras()});
- $('#phaseProfileSave').onsubmit=async e=>{e.preventDefault();try{const values=Object.fromEntries(new FormData(e.target));for(const key of dimensionKeys){if(Object.hasOwn(values,key))values[key]=mmFromMetres(values[key]);}profile=await req('caravan-profile','PUT',values);renderProfile();$('#phaseError').textContent='';window.caravanUXToast?.('Caravan profile saved')}catch(err){alertError(err)}};
+ $('#phaseProfileForm').addEventListener('input',e=>{if(e.target.matches('[data-tyre-part]')){e.currentTarget.dataset.tyreChanged='true';updateTyreSize(e.currentTarget);}if(['noseweight_limit_kg','insurance_contact','breakdown_contact'].includes(e.target.name))updateProfileExtras()});
+ $('#phaseProfileSave').onsubmit=async e=>{e.preventDefault();updateTyreSize($('#phaseProfileForm'));const tyre=$('#phaseProfileForm input[name=tyre_size]');if(tyre&&!tyre.checkValidity()){tyre.closest('.tyre-field')?.querySelector('[data-tyre-part]')?.focus();return;}try{const values=Object.fromEntries(new FormData(e.target));for(const key of dimensionKeys){if(Object.hasOwn(values,key))values[key]=mmFromMetres(values[key]);}profile=await req('caravan-profile','PUT',values);renderProfile();$('#phaseError').textContent='';window.caravanUXToast?.('Caravan profile saved')}catch(err){alertError(err)}};
  async function load(){try{if(!loaded){[trips,profile]=await Promise.all([req('trips'),req('caravan-profile')]);renderProfile();loaded=true;}await refresh();$('#phaseError').textContent='';}catch(err){alertError(err)}}
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
