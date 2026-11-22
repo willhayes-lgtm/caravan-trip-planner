@@ -1,0 +1,15 @@
+#payloadPage .payload-safety-trigger{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;min-width:36px;padding:0;border:1px solid #bed9db;border-radius:50%;background:#e8f3f3;color:#176d78;font-size:23px;line-height:1;cursor:pointer}
+#payloadPage .payload-safety-trigger:focus-visible{outline:3px solid #168d96;outline-offset:3px}
+.payload-safety-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box;width:calc(100% - 32px);max-width:440px;max-height:80dvh;padding:22px;border:1px solid #c6dfe0;border-radius:20px;background:#fff;color:#244c58;box-shadow:0 20px 65px #0b344b44;overflow:auto}
+.payload-safety-dialog::backdrop{background:#0a293b9c}
+.payload-safety-dialog-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.payload-safety-dialog-head h2{font-size:21px;line-height:1.25;margin:0 0 14px}
+.payload-safety-dialog-head button{min-width:40px;min-height:40px;padding:0;font-size:20px}
+.payload-safety-dialog p{font-size:15px;line-height:1.6;margin:0 0 12px;overflow-wrap:anywhere}
+#payloadSafetyDone{display:block;margin:18px 0 0 auto;min-height:44px}
+@media(max-width:900px){
+.cmh-compact-heading>.ux-page-pinbar.cmh-in-heading{width:auto!important;min-width:0!important;max-width:none!important;flex:0 0 auto!important}
+.cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent{width:auto!important;min-width:0!important;max-width:none!important;height:42px!important;min-height:42px!important;max-height:none!important;flex:0 0 auto!important;padding:0 12px!important;font-size:13px!important;line-height:1.2!important;font-weight:700!important;letter-spacing:normal!important;white-space:nowrap!important;overflow:visible!important}
+.cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent::before,.cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent[aria-pressed=true]::before{content:none!important;display:none!important}
+}
+@media(max-width:480px){.cmh-compact-heading>.ux-page-pinbar.cmh-in-heading #uxPinCurrent{padding:0 9px!important;font-size:12px!important}}

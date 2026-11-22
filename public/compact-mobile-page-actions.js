@@ -9,7 +9,7 @@ function init(){
  const originalText=()=>pin.getAttribute('aria-pressed')==='true'?'Remove dashboard shortcut':'Add to dashboard';
  const setAppearance=()=>{
   if(mq.matches&&bar.classList.contains('cmh-in-heading')){
-   if(pin.textContent!=='▦')pin.textContent='▦';
+   const label=pin.getAttribute('aria-pressed')==='true'?'✓ On dashboard':'+ Dashboard';if(pin.textContent!==label)pin.textContent=label;
    pin.title=originalText();
    pin.setAttribute('aria-label',originalText());
   }else{
